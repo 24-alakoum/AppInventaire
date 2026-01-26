@@ -5,6 +5,8 @@
         <meta charset="utf-8" />
         <title>Inscription</title>
         <link type="text/css" rel="stylesheet" href="form.css" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
         <style type="text/css">
         
         
@@ -38,7 +40,9 @@ form .requis {
 
 form .erreur {
     color: #900}
-        
+    
+    
+          
         </style>
     </head>
     <body>
@@ -68,38 +72,38 @@ form .erreur {
                 <br />
  				 <label for="nom">Telephone d'utilisateur</label>
                 <input type="text" id="telephone" name="telephone" value="" size="20" maxlength="20" />
- 				<span class="erreur">${erreurs['prenom']}</span>
+ 				<span class="erreur">${erreurs['telephone']}</span>
  				<br>
                 <input type="submit" value="Inscription" class="sansLabel" />
                 <br />
                 <p class="${empty erreurs ? 'succes' : 'erreur'}">${resultat}</p>
             </fieldset>
         </form>
+        <br>
         
-        <c:if test="${ !empty luser }">
-        
-        	<table border="1">
-        		<tr>
-        			<th>ID</th>
-        			<th>Nom</th>
-        			<th>Prenom</th>
-        			<th>Email</th>
-        			<th>Mot de passe</th>
-        			<th>Telephone</th>
-        		</tr>
-        		<c:forEach items="${ luser }" var="user">
-        			<tr>
-        				<td>${user.id }<td/>
-        				<td>${user.nom }<td/>
-        				<td>${user.prenom }<td/>
-        				<td>${user.email }<td/>
-        				<td>${user.mot_de_passe }<td/>
-        				<td>${user.telephone }<td/>
-        			</tr>
-        		
-        		</c:forEach>
-        	</table>
-        
-        </c:if>
+        <c:if test="${!empty luser }">
+	<table class="table table-striped table-dark table-hover container text-center table-bordered caption-top table-rounded-2 " >
+		<caption class="text-center fw-bolder display-3 w-full">LISTE DES UTILISATEURS</caption>
+		<tr>
+			<th>Id user</th>
+			<th>nom</th>
+			<th>Prenom</th>
+			<th>Email</th>
+			<th>Mot de passe</th>
+			<th>Telephone</th>
+		</tr>
+		<c:forEach items="${ luser }" var ="user">
+			<tr>
+				<td>${user.id} </td>
+				<td>${user.nom}</td>
+				<td>${user.prenom} </td>
+				<td>${user.email}</td>
+				<td>${user.mot_de_passe} </td>
+				<td>${user.telephone}  </td>
+				
+			<tr>
+		</c:forEach>
+	</table>
+</c:if> 
     </body>
 </html>

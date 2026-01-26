@@ -21,11 +21,11 @@ import app.metier.models.User;
 public class Inscription extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String  VUE= "/WEB-INF/inscription.jsp"; 
+		public static final String CHAMP_NOM = "nom";
+	    public static final String CHAMP_PRENOM = "prenom";
 	    public static final String CHAMP_EMAIL = "email";
 	    public static final String CHAMP_PASS = "motdepasse";
 	    public static final String CHAMP_CONF = "confirmation";
-	    public static final String CHAMP_NOM = "nom";
-	    public static final String CHAMP_PRENOM = "prenom";
 	    public static final String CHAMP_TEL= "telephone";
 	    public static final String ATT_ERREURS  = "erreurs";
 	    public static final String ATT_RESULTAT = "resultat";
@@ -135,13 +135,16 @@ public class Inscription extends HttpServlet {
 	        doGet(request, response);
 	    }
 
-	private void validationTel(String telephone) throws Exception {
+
+	
+	private void validationNom(String nom) throws Exception {
 		// TODO Auto-generated method stub
-		 if ( telephone != null && telephone.trim().length() < 8 ) {
-		        throw new Exception( "Le numero d'utilisateur doit contenir au moins 3 caractères." );
+		 if ( nom != null && nom.trim().length() < 3 ) {
+		        throw new Exception( "Le nom d'utilisateur doit contenir au moins 3 caractères." );
 		    }
 		
 	}
+	
 
 	private void validationPrenom(String prenom) throws Exception {
 		// TODO Auto-generated method stub
@@ -151,13 +154,17 @@ public class Inscription extends HttpServlet {
 		
 	}
 	
-	private void validationNom(String nom) throws Exception {
+	private void validationEmail(String email) throws Exception {
 		// TODO Auto-generated method stub
-		 if ( nom != null && nom.trim().length() < 3 ) {
-		        throw new Exception( "Le nom d'utilisateur doit contenir au moins 3 caractères." );
-		    }
-		
+		 if ( email != null && email.trim().length() != 0 ) {
+		       /* if ( !email.matches("@") ) {
+		        	throw new Exception( "Merci de saisir une adresse mail valide." );
+		        }
+		        else {
+		            throw new Exception( "Merci de saisir une adresse mail." );
+		        }*/
 	}
+	}	
 
 	private void validationMotsDePasse(String motDePasse, String confirmation) throws Exception {
 		// TODO Auto-generated method stub
@@ -174,17 +181,14 @@ public class Inscription extends HttpServlet {
 		
 	}
 
-	private void validationEmail(String email) throws Exception {
+	private void validationTel(String telephone) throws Exception {
 		// TODO Auto-generated method stub
-		 if ( email != null && email.trim().length() != 0 ) {
-		       /* if ( !email.matches("@") ) {
-		        	throw new Exception( "Merci de saisir une adresse mail valide." );
-		        }
-		        else {
-		            throw new Exception( "Merci de saisir une adresse mail." );
-		        }*/
+		 if ( telephone != null && telephone.trim().length() < 8 ) {
+		        throw new Exception( "Le numero d'utilisateur doit contenir au moins 8 caractères." );
+		    }
+		
 	}
-	}	
+	
 
 	}
 
