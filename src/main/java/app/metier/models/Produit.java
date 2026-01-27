@@ -2,7 +2,9 @@ package app.metier.models;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,8 +53,30 @@ public class Produit {
 	//Mehode get data
 	public List<Produit> getProduits(Produit pd){
 		List<Produit> lpds = new ArrayList<Produit>();
+		String sql = "SELECT * from  produit";
+		Connection connection =null;
+		DBA bd = new DBA();
+		connection = bd.seconnecter();
+		Statement pst = null;
+		ResultSet rs = null;
 		
-		
+		try {
+			pst = connection.createStatement();
+			rs = pst.executeQuery(sql);
+			while(rs.next()) {
+				Produit  pds = new Produit();
+				pds.setIdProduct(rs.getInt(1));
+				pds.setProductName(rs.getString(2));
+				lpds.add(pds);
+				rs.close();
+				pst.close();
+				connection.close();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+;		
 		return lpds;
 	}
 	
