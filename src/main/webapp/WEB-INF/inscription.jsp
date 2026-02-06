@@ -4,82 +4,168 @@
     <head>
         <meta charset="utf-8" />
         <title>Inscription</title>
+        <link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
         <link type="text/css" rel="stylesheet" href="form.css" />
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
         <style type="text/css">
         
         
-        body, p, legend, label, input {
-    	font: normal 8pt verdana, helvetica, sans-serif;
-}
-fieldset {
-    padding: 10px;
-    border: 1px #0568CD solid;
-}
-legend {
-    font-weight: bold;
-    color: #0568CD;
-}
-/* Forms --------------------------------------------------------------------------------------- */
-form label {
-    float: left;
-    width: 200px;
-    margin: 3px 0px 0px 0px;
-}
-form input {
-    margin: 3px 3px 0px 0px;
-    border: 1px #999 solid;
-}
-form input.sansLabel {
-    margin-left: 200px;
-}
-form .requis {
-    color: #c00;
+       
+    
+    
+    
+.btn-cancel {
+    background-color: #64748b;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 6px;
+    text-decoration: none;
 }
 
-form .erreur {
-    color: #900}
+.form-card {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    max-width: 600px;
+    margin: 40px auto;
+}
+
+.form-card fieldset {
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 30px;
+}
+
+.form-card legend {
+    font-size: 22px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #334155;
+}
+
+.form-group input {
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    font-size: 15px;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #38bdf8;
+}
+
+/* ERREURS & SUCCES */
+.erreur {
+    color: #ef4444;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.succes {
+    color: #16a34a;
+    font-weight: 600;
+    font-size: 16px;
+    margin-top: 15px;
+    text-align: center;
+}
     
+    /* BOUTON INSCRIPTION */
+.form-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.btn-save {
+    background-color: #16a34a;
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+
+.btn-save:hover {
+    background-color: #15803d;
+}
     
           
         </style>
     </head>
     <body>
-        <form method="post" action="Inscription">
-            <fieldset>
-                <legend>Inscription</legend>
-                <p>Vous pouvez vous inscrire via ce formulaire.</p>
-                 <label for="nom">Nom d'utilisateur</label>
-                <input type="text" id="nom" name="nom"  size="20" maxlength="20" value="${param.nom }" />
- 				<span class="erreur">${erreurs['nom']}</span>
-                <br />
-                <label for="nom">Prenom d'utilisateur</label>
-                <input type="text" id="prenom" name="prenom" value="${param.prenom }" size="20" maxlength="20" />
- 				<span class="erreur">${erreurs['prenom']}</span>
- 				<br>
-                <label for="email">Adresse email <span class="requis">*</span></label>
-                <input type="text" id="email" name="email" value="" size="20" maxlength="60" />
-	 			<span class="erreur">${erreurs['email']}</span>
-                <br />
-                <label for="motdepasse">Mot de passe <span class="requis">*</span></label>
-                <input type="password" id="motdepasse" name="motdepasse" value="" size="20" maxlength="20" />
-                <span class="erreur">${erreurs['motdepasse']}</span>
-                <br />
-                <label for="confirmation">Confirmation du mot de passe <span class="requis">*</span></label>
-                <input type="password" id="confirmation" name="confirmation" value="" size="20" maxlength="20" />
-                <span class="erreur">${erreurs['confirmation']}</span>
-                <br />
- 				 <label for="nom">Telephone d'utilisateur</label>
-                <input type="text" id="telephone" name="telephone" value="" size="20" maxlength="20" />
- 				<span class="erreur">${erreurs['telephone']}</span>
- 				<br>
- 				<br>
-                <input type="submit" value="Inscription" class="sansLabel" />
-                <br />
-                <p class="${empty erreurs ? 'succes' : 'erreur'}">${resultat}</p>
-            </fieldset>
-        </form>
+      <form method="post" action="Inscription" class="form-card">
+
+    <fieldset>
+        <legend>Inscription</legend>
+        <p>Vous pouvez vous inscrire via ce formulaire.</p>
+
+        <div class="form-group">
+            <label for="nom">Nom d'utilisateur</label>
+            <input type="text" id="nom" name="nom" value="" maxlength="20" />
+            <span class="erreur">${erreurs['nom']}</span>
+        </div>
+
+        <div class="form-group">
+            <label for="prenom">Prénom d'utilisateur</label>
+            <input type="text" id="prenom" name="prenom" value="" maxlength="20" />
+            <span class="erreur">${erreurs['prenom']}</span>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Adresse email <span class="requis">*</span></label>
+            <input type="email" id="email" name="email" value="" maxlength="60" />
+            <span class="erreur">${erreurs['email']}</span>
+        </div>
+
+        <div class="form-group">
+            <label for="motdepasse">Mot de passe <span class="requis">*</span></label>
+            <input type="password" id="motdepasse" name="motdepasse" maxlength="20" />
+            <span class="erreur">${erreurs['motdepasse']}</span>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmation">Confirmation du mot de passe <span class="requis">*</span></label>
+            <input type="password" id="confirmation" name="confirmation" maxlength="20" />
+            <span class="erreur">${erreurs['confirmation']}</span>
+        </div>
+
+        <div class="form-group">
+            <label for="telephone">Téléphone d'utilisateur</label>
+            <input type="text" id="telephone" name="telephone" value="${param.telephone }" maxlength="20" />
+            <span class="erreur">${erreurs['telephone']}</span>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-save">
+                <i class="fa-solid fa-user-plus"></i> S'inscrire
+            </button>
+        </div>
+
+        <p class="${empty erreurs ? 'succes' : 'erreur'}">${resultat}</p>
+
+    </fieldset>
+</form>
+
         <br>
         
     </body>

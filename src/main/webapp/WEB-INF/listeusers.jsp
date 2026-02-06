@@ -10,7 +10,7 @@
 body {
     background: linear-gradient(135deg, #020617, #0f172a);
     font-family: 'Segoe UI', Tahoma, sans-serif;
-    color: #e5e7eb;
+    color: #000;
 }
 
 /* ===== CONTAINER FORM ===== */
@@ -104,6 +104,7 @@ table {
     background: #020617;
     border-radius: 14px;
     overflow: hidden;
+    color: black;
 }
 
 th {
@@ -136,42 +137,149 @@ a:hover {
     text-decoration: underline;
 }
 
+
+
+/* TITRE PAGE */
+.page-title {
+    font-size: 28px;
+    margin-bottom: 25px;
+    color: #0f172a;
+}
+
+/* BOUTONS HAUT */
+.top-actions {
+    display: flex;
+    justify-content: space-between;
+    margin: 25px 10%;
+     width: 80%;
+     
+}
+
+.btn-add, .btn-home {
+    padding: 10px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+}
+
+.btn-add {
+    background-color: #16a34a;
+}
+
+.btn-home {
+    background-color: #0ea5e9;
+}
+
+/* TABLEAU MODERNE */
+.styled-table {
+    width: 80%;
+    border-collapse: collapse;
+    background-color: white;
+     margin: 25px 10%;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    border-radius: 10px;
+    overflow: hidden;
+    color: black;
+}
+
+.styled-table thead {
+    background-color: #0f172a;
+    color: white;
+}
+
+.styled-table th, .styled-table td {
+    padding: 14px 16px;
+    text-align: left;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.styled-table tbody tr:hover {
+    background-color: #f1f5f9;
+}
+
+/* ACTIONS */
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-edit, .btn-delete {
+    padding: 8px 10px;
+    border-radius: 6px;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-edit {
+    background-color: #f59e0b;
+}
+
+.btn-delete {
+    background-color: #ef4444;
+}
+
+
+
+
 </style>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-	<section>
-	 <c:if test="${!empty luser }">
-	<table class="table table-striped table-dark table-hover container text-center table-bordered caption-top table-rounded-2 " >
-		<caption class="text-center fw-bolder display-3 w-full">LISTE DES UTILISATEURS</caption>
-		<tr>
-			<th>Id user</th>
-			<th>nom</th>
-			<th>Prenom</th>
-			<th>Email</th>
-			<th>Telephone</th>
-			<th>Actions</th>
-		</tr>
-		<c:forEach items="${ luser }" var ="user">
-			<tr>
-				<td>${user.id} </td>
-				<td>${user.nom}</td>
-				<td>${user.prenom} </td>
-				<td>${user.email}</td>
-				<td>${user.telephone}  </td>
-				<td>
-					<a href="ModifierUser?param=${user.id }">Modifier</a>
-					<a href="SupprimerUser?param=${user.id }" onclick="return confirm('Etez-vous sur')">Supprimer</a>
-				</td>
-				
-			<tr>
-		</c:forEach>
-	</table>
-</c:if> 
-</section>
-<div>
-	<button><a href="inscription.jsp">Ajouter un utilisateur</a></button>
-	<a href="${pageContext.request.contextPath }/index.jsp">Accueil</a>
-	
+	<div class="container">
+
+    <h2 class="page-title">
+        <i class="fa-solid fa-users"></i> Liste des utilisateurs
+    </h2>
+
+    <div class="top-actions">
+        <a href="Inscription" class="btn-add">
+            <i class="fa-solid fa-user-plus"></i> Ajouter un utilisateur
+        </a>
+
+        <a href="index.jsp" class="btn-home">
+            <i class="fa-solid fa-house"></i> Accueil
+        </a>
+    </div>
+
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>Id user</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <c:forEach var="u" items="${luser}">
+                <tr>
+                    <td>${u.id}</td>
+                    <td>${u.nom}</td>
+                    <td>${u.prenom}</td>
+                    <td>${u.email}</td>
+                    <td>${u.telephone}</td>
+                    <td class="actions">
+                        <a href="ModifierUser?id=${u.id}" class="btn-edit">
+                            <i class="fa-solid fa-pen"></i>
+                        </a>
+
+                        <a href="SupprimerUser?id=${u.id}" class="btn-delete">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            </c:forEach>
+        </tbody>
+    </table>
+
 </div>
 </body>
 </html>
