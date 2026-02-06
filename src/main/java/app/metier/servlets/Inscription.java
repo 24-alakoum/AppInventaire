@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import app.metier.models.PasswordUtil;
 import app.metier.models.User;
 
 /**
@@ -21,6 +22,7 @@ import app.metier.models.User;
 public class Inscription extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String  VUE= "/WEB-INF/inscription.jsp"; 
+	private static final String  VUE1= "/WEB-INF/login.jsp"; 
 		public static final String CHAMP_NOM = "nom";
 	    public static final String CHAMP_PRENOM = "prenom";
 	    public static final String CHAMP_EMAIL = "email";
@@ -29,6 +31,7 @@ public class Inscription extends HttpServlet {
 	    public static final String CHAMP_TEL= "telephone";
 	    public static final String ATT_ERREURS  = "erreurs";
 	    public static final String ATT_RESULTAT = "resultat";
+	    //public static final String CHAMP_ROLE="role";
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -70,9 +73,10 @@ public class Inscription extends HttpServlet {
         String nom = request.getParameter( CHAMP_NOM );
 	    String prenom = request.getParameter(CHAMP_PRENOM);
 		String email = request.getParameter(CHAMP_EMAIL);
-		String motDePasse = request.getParameter( CHAMP_PASS );
-	    String confirmation = request.getParameter( CHAMP_CONF );
+		String motDePasse =PasswordUtil.hashPassword( request.getParameter( CHAMP_PASS ));
+	    String confirmation = PasswordUtil.hashPassword(request.getParameter( CHAMP_CONF ));
 	    String telephone = request.getParameter(CHAMP_TEL);
+	    //String role = request.getParameter( CHAMP_ROLE);
 	    
 	    
 	    try {
@@ -108,6 +112,7 @@ public class Inscription extends HttpServlet {
         } catch ( Exception e ) {
             erreurs.put( CHAMP_TEL, e.getMessage() );
         }
+       
         
         
         /* Initialisation du résultat global de la validation. */
@@ -124,6 +129,7 @@ public class Inscription extends HttpServlet {
         user.setEmail(email);
         user.setMot_de_passe(motDePasse);
         user.setTelephone(telephone);
+        //user.setRole(role);
         
         //Enregister dans la table
         user.enregistrer(user);
@@ -132,11 +138,19 @@ public class Inscription extends HttpServlet {
         
         request.setAttribute(ATT_ERREURS, erreurs);
         request.setAttribute(ATT_RESULTAT, resultat);
-	        doGet(request, response);
+        request.getServletContext().getRequestDispatcher(VUE1).forward(request, response);
+	        //doGet(request, response);
 	    }
 
 
 	
+	private String validationRole(String role) {
+		// TODO Auto-generated method stub
+		String value = "user";
+		return value;
+		
+	}
+
 	private void validationNom(String nom) throws Exception {
 		// TODO Auto-generated method stub
 		 if ( nom != null && nom.trim().length() < 3 ) {

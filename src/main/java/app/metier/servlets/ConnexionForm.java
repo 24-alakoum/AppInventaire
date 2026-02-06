@@ -1,10 +1,17 @@
 package app.metier.servlets;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import app.metier.models.DBA;
 import app.metier.models.User;
 
 public class ConnexionForm {
@@ -91,12 +98,40 @@ public class ConnexionForm {
 	private String getValeur(HttpServletRequest request, String nomChamp) {
 		// TODO Auto-generated method stub
 		String valeur = request.getParameter(nomChamp);
-		if(valeur == null || valeur.trim().length() < 0) {
+		if(valeur == null || valeur.trim().length() <= 0) {
 			return null;
 		}
-		return valeur;
+		else {
+			return valeur; 
+		}
+		
 	}
 	
+	public User userExists(String email,String password) {
+		User luser = new User();
+		String sql = "SELECT * FROM utilisateur WHERE email=? AND mot_de_passe=?";
+		Connection connection =null;
+		DBA bd = new DBA();
+		connection = bd.seconnecter();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			pst = connection.prepareStatement(sql);
+			pst.setString(1, email);
+			pst.setString(2, password);
+			rs = pst.executeQuery();
+			if(rs.next()) {
+				return luser;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+		
+	}
 	
 
 }

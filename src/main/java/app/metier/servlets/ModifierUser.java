@@ -18,7 +18,7 @@ import app.metier.models.User;
 @WebServlet("/ModifierUser")
 public class ModifierUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String VUE = "/WEB-INF/frmuser.jsp";
+	private static final String VUE = "/WEB-INF/listeusers.jsp";
 	private static final String VUE1 = "/WEB-INF/modifieruser.jsp";
        
     /**
@@ -36,13 +36,13 @@ public class ModifierUser extends HttpServlet {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		String ID = request.getParameter("param");//Recuperer param
-		int i = Integer.parseInt(ID);//Convertir en int
-		User userid = new User();//Creer bean 
-		userid = userid.getUserById(i);//Appeler methode getUserById
+		int id = Integer.parseInt(ID);
+		User userId = new User();//Creer bean 
+		userId = userId.userById(id);//Appeler methode getUserById
 		List<User> luser = new ArrayList<User>();//List
-		luser = userid.getUsers();//Appeler methode getUsers
+		luser = userId.getUsers();//Appeler methode getUsers
 		request.setAttribute("luser", luser);//Placer dans le request
-		request.setAttribute("userid", userid);//Placer dans le request
+		request.setAttribute("userid", userId);//Placer dans le request
 		//Appeler la vue frmprincipal
 		request.getServletContext().getRequestDispatcher(VUE1).forward(request,response);
 	}
@@ -54,15 +54,23 @@ public class ModifierUser extends HttpServlet {
 		// TODO Auto-generated method stub
 		//Charger les donnees
 				String ID = request.getParameter("identifiant");
-				String user = request.getParameter("name");
-				String pass =(request.getParameter("pass"));
-				int id = Integer.parseInt(ID);
+				String usernom = request.getParameter("name");
+				String userprenom = request.getParameter("prenom");
+				String email =request.getParameter("email");
+				String motdepasse = request.getParameter("motdepasse");
+				String telephone = request.getParameter("telephone");
+
+				long id  = Long.parseLong(ID);
 				
 				//Creer l'objet
 				User users = new User();
-				users.setIdentifiant(id);
-				users.setUsername(user);
-				users.setPassword(pass);
+				users.setId(id);
+				users.setNom(usernom);
+				users.setPrenom(userprenom);
+				users.setEmail(email);
+				users.setMot_de_passe(motdepasse);
+				users.setTelephone(telephone);
+				
 				//Enregistrer
 				List<User> luser = new ArrayList<User>();
 				//Appliquer les modifications

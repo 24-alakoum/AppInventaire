@@ -15,7 +15,8 @@ public class User {
 	private String prenom;
 	private String email;
 	private String mot_de_passe;
-	private String telephone; 
+	private String telephone;
+	private String role ;
 	
 	
 	//Parametres des elements
@@ -77,6 +78,15 @@ public class User {
 	public void setTelephone(String telephone) {
 		this.telephone = telephone;
 	}
+	
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 
 	//Methode Enregistrer
 	public void enregistrer(User user) {
@@ -92,6 +102,7 @@ public class User {
 			pst.setString(3,user.getEmail());
 			pst.setString(4, user.getMot_de_passe());
 			pst.setString(5, user.getTelephone());
+			//.setString(6, user.getRole());
 			int i = pst.executeUpdate();
 			if(i != 0) System.out.println("Enregistrement effectué !");
 			else System.out.println("Enregistrement non effectué !");
@@ -136,6 +147,7 @@ public class User {
 				user.setEmail(rs.getString(4));
 				user.setMot_de_passe(rs.getString(5));
 				user.setTelephone(rs.getString(6));
+				//user.setRole(rs.getString(7));
 				luser.add(user);
 			}
 			if(rs!= null) {
@@ -163,8 +175,8 @@ public class User {
 		return luser;
 	}//Fin de la methode getUser
 	
-	public void updateUser(User user,int identifiant) {
-		String sql = "UPDATE utilisateur SET nom = ?  prenom =?  email=?  mot_de_passe =? telephone =? WHERE ( id=?)";
+	public void updateUser(User user,long id) {
+		String sql = "UPDATE utilisateur SET nom = ? , prenom =?  ,email=? , mot_de_passe =? ,telephone =? WHERE ( idutilisateur=?)";
 		Connection connection =null;
 		DBA bd = new DBA();
 		connection = bd.seconnecter();
@@ -215,10 +227,10 @@ public class User {
 			e.printStackTrace();
 		}
 		return user;
-	}//Fin methode userbyId
+	}//Fin methode userbyId*/
 	
 	public void deleteUser(int id) {
-		String sql = "DELETE FROM  utilisateur WHERE ( userId=?)";
+		String sql = "DELETE FROM  utilisateur WHERE ( idutilisateur=?)";
 		Connection connection =null;
 		DBA bd = new DBA();
 		connection = bd.seconnecter();
@@ -237,7 +249,106 @@ public class User {
 			e.printStackTrace();
 		}
 		
-	}*/
+	}
+	
+	public User connecterUser(String em){
+		
+		
+		String sql = "SELECT *  FROM  utilisateur WHERE (email=?)";
+		Connection connection =null;
+		DBA bd = new DBA();
+		connection = bd.seconnecter();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		try {
+			pst = connection.prepareStatement(sql);
+			pst.setString(1, em);
+			rs = pst.executeQuery();
+			if(rs.next()) {
+				User u = new User();
+				u.setId(rs.getLong(1));
+				u.setNom(rs.getString(2));
+				u.setPrenom(rs.getString(3));
+				u.setEmail(rs.getString(4));
+				u.setMot_de_passe(rs.getString(5));
+				u.setTelephone(rs.getString(6));
+				return u;
+					
+			}
+			if(rs!= null) {
+			    try {
+			        rs.close();
+			    } catch ( SQLException ignore ) {}
+			}
+			if(pst!= null) {
+			    try {
+			        pst.close();
+			    } catch ( SQLException ignore ) {}
+			}    
+		if(connection != null) {
+			try {
+				connection.close();
+			}
+			catch(SQLException ignore) {}
+		}
+		
+			} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	//Methode recuperer user by id
+	
+public User userById(int id){
+		
+		
+		String sql = "SELECT *  FROM  utilisateur WHERE (idutilisateur=?)";
+		Connection connection =null;
+		DBA bd = new DBA();
+		connection = bd.seconnecter();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		try {
+			pst = connection.prepareStatement(sql);
+			pst.setInt(1, id);
+			rs = pst.executeQuery();
+			if(rs.next()) {
+				User u = new User();
+				u.setId(rs.getLong(1));
+				u.setNom(rs.getString(2));
+				u.setPrenom(rs.getString(3));
+				u.setEmail(rs.getString(4));
+				u.setMot_de_passe(rs.getString(5));
+				u.setTelephone(rs.getString(6));
+				return u;
+					
+			}
+			if(rs!= null) {
+			    try {
+			        rs.close();
+			    } catch ( SQLException ignore ) {}
+			}
+			if(pst!= null) {
+			    try {
+			        pst.close();
+			    } catch ( SQLException ignore ) {}
+			}    
+		if(connection != null) {
+			try {
+				connection.close();
+			}
+			catch(SQLException ignore) {}
+		}
+		
+			} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
 
 
 
