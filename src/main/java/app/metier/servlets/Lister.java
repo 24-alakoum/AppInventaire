@@ -1,4 +1,4 @@
-package app.metier.servlets;
+	package app.metier.servlets;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,18 +12,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import app.metier.models.User;
 
-
 /**
- * Servlet implementation class SupUser
+ * Servlet implementation class Lister
  */
-@WebServlet("/SupprimerUser")
-public class SupprimerUser extends HttpServlet {
+@WebServlet("/Lister")
+public class Lister extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SupprimerUser() {
+    public Lister() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,27 +33,10 @@ public class SupprimerUser extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		//Recuperer param
-		String ID = request.getParameter("param");
-		int id = Integer.parseInt(ID);
-		//Creer bean
-		User user = new User();
-		user.deleteUser(id);
-		//Creer une liste
-		List<User> luser = new ArrayList<User>();
-		luser = user.getUsers();
-		//Placer dans request
-		request.setAttribute("luser", luser);
-		
-		/*Utilisateur user = new Utilisateur();
-		//Recuperer les parametres
-		String numcard = request.getParameter("param");
-		user.deleteUser(numcard);
-		
-		List<Utilisateur> luser = new ArrayList<Utilisateur>();
-		luser = user.getUtilisateurs();
-		// Placer les donnees dans la requete
-		request.setAttribute("lutil", luser);*/
+		List<User> luser = new ArrayList<User>();//1.Creer une liste pour stocker les enregistrements
+		User user = new User();//2.Creer une instance du bean
+		luser = user.getUsers();//3.Recuperer les enregistrements de la base
+		request.setAttribute("luser", luser);//4.Placer dans la request
 		
 		request.getServletContext().getRequestDispatcher("/WEB-INF/listeusers.jsp").forward(request, response);
 	}

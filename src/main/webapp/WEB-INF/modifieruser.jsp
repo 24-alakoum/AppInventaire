@@ -6,10 +6,11 @@
 <meta charset="UTF-8">
 <title>GESTION DES INVENTAIRES</title>
 <style type="text/css">
-	.contact{
+	body, .contact{
 		color: white;
 		height: 100vh;
-		background-color: rgba(115,167,136,.8);
+		background-color:black;
+		
 		
 	}
 	.contact h2,legend{
@@ -28,6 +29,7 @@
 	display: flex;
 	width: 100%;
 	justify-content: space-evenly;
+	flex-direction: column;
 	
 	}
 	form{
@@ -84,24 +86,35 @@ form p input {
 			<legend>Mise à jour utilisateur</legend>
 			<p>
 				<label for="name">id  user</label>
-				<input type="text" name="identifiant" id="identifiant" value="${userid.identifiant }" readonly="readonly"/>
+				<input type="text" name="identifiant" id="identifiant" value="${userid.id }" readonly="readonly"/>
 			</p>
 			<p>
 				<label for="name">Nom user</label>
-				<input type="text" name="name" id="name" value="${userid.username }"/>
+				<input type="text" name="name" id="name" value="${userid.nom }"/>
+			</p>
+			<p>
+				<label for="prenom">Prenom</label>
+				<input type="text" name="prenom" id="prenom" value="${userid.prenom }"/>
+			</p>
+			<p>
+				<label for="email">Email</label>
+				<input type="text" name="email" id="email" value="${userid.email}"/>
 			</p>
 			<p>
 				<label for="pass">Password</label>
-				<input type="password" name="pass" id="pass" value="${userid.password }"/>
+				<input type="password" name="passe" id="passe" value="${userid.mot_de_passe }"/>
 			</p>
+			<p>
+				<label for="telephone">Telephone</label>
+				<input type="text" name="telephone" id="telephone" value="${userid.telephone }"/>
+			</p>
+		
 			<p class="btn">
 				<input type="submit" name="mod" value="Valider"/>
 				<input type="reset" name="res" value="Annuler"/>
 			</p>
 		</fieldset>
 	</form>
-	<p>${userid.username }</p>
-	<p>${userid.password }</p>
 	
 	<!-- La table pour afficher les enregistrements -->
 	<c:if test="${!empty luser }">
@@ -109,17 +122,25 @@ form p input {
 			  <tr>
 			    <th>Numero d'user</th>
 			    <th>User name</th>
+			    <th>User Prenom</th>
+			    <th>User Email</th>
 			    <th>Password</th>
+			    <th>User Telephone</th>
+			   
 			    <th>Actions</th>
 			  </tr>
 			  <c:forEach items="${ luser }" var="user">
 			  	<tr>
-				    <td>${user.identifiant }</td>
-				    <td>${user.username }</td>
-				    <td>${user.password}</td>
+				    <td>${user.id }</td>
+				    <td>${user.nom }</td>
+				    <td>${user.prenom}</td>
+				    <td>${user.email}</td>
+				    <td>${user.mot_de_passe}</td>
+				    <td>${user.telephone}</td> 
+				    
 				    <td>
-				    	<a href="ModifierUser?param=${user.identifiant }">Modifier</a>
-				    	<a href="SupprimerUser?param=${user.identifiant }">Supprimer</a>
+				    	<a href="ModifierUser?param=${user.id }">Modifier</a>
+				    	<a href="SupprimerUser?param=${user.id }">Supprimer</a>
 				    </td>
 			  	</tr>
 			  </c:forEach>

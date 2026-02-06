@@ -74,6 +74,7 @@ form .erreur {
                 <input type="text" id="telephone" name="telephone" value="" size="20" maxlength="20" />
  				<span class="erreur">${erreurs['telephone']}</span>
  				<br>
+ 				<br>
                 <input type="submit" value="Inscription" class="sansLabel" />
                 <br />
                 <p class="${empty erreurs ? 'succes' : 'erreur'}">${resultat}</p>
@@ -81,29 +82,5 @@ form .erreur {
         </form>
         <br>
         
-        <c:if test="${!empty luser }">
-	<table class="table table-striped table-dark table-hover container text-center table-bordered caption-top table-rounded-2 " >
-		<caption class="text-center fw-bolder display-3 w-full">LISTE DES UTILISATEURS</caption>
-		<tr>
-			<th>Id user</th>
-			<th>nom</th>
-			<th>Prenom</th>
-			<th>Email</th>
-			<th>Mot de passe</th>
-			<th>Telephone</th>
-		</tr>
-		<c:forEach items="${ luser }" var ="user">
-			<tr>
-				<td>${user.id} </td>
-				<td>${user.nom}</td>
-				<td>${user.prenom} </td>
-				<td>${user.email}</td>
-				<td>${user.mot_de_passe} </td>
-				<td>${user.telephone}  </td>
-				
-			<tr>
-		</c:forEach>
-	</table>
-</c:if> 
     </body>
 </html>
