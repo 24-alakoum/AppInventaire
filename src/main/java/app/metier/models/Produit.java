@@ -51,7 +51,7 @@ public class Produit {
 	}
 	
 	//Mehode get data
-	public List<Produit> getProduits(Produit pd){
+	public List<Produit> getProduits(){
 		List<Produit> lpds = new ArrayList<Produit>();
 		String sql = "SELECT * from  produit";
 		Connection connection =null;
@@ -68,10 +68,12 @@ public class Produit {
 				pds.setIdProduct(rs.getInt(1));
 				pds.setProductName(rs.getString(2));
 				lpds.add(pds);
-				rs.close();
-				pst.close();
-				connection.close();
+				
 			}
+			
+			rs.close();
+			pst.close();
+			connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -1,0 +1,72 @@
+@charset "UTF-8";
+
+body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f6fa;
+            padding: 20px;
+        }
+
+        .fiche {
+            max-width: 900px;
+            margin: auto;
+            background-color: white;
+            padding: 25px;
+            border: 1px solid #ccc;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            text-align: center;
+            margin-top: 0;
+            font-weight: normal;
+        }
+
+        .infos {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .infos div {
+            width: 48%;
+        }
+
+        .infos p {
+            margin: 5px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #999;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+
+        .signature {
+            text-align: center;
+            width: 30%;
+        }
+
+        .signature p {
+            margin-bottom: 60px;
+        }
