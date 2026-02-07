@@ -297,6 +297,6 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 </section>
 
 </div>	
->>>>>>> 72924bfd2d1baa7abb29300bbb0a9e522dc193af
+
 </body>
 </html>
