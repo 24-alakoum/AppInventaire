@@ -16,7 +16,7 @@ public class DBA {
 		//Les parametres de connexion à la base 
 		String url = "jdbc:mysql://localhost:3306/appinventaire?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 		String user = "root";
-		String pwd = "segalleg@1230";
+		String pwd = ""; // <-- Mot de passe supprimé, à configurer ou sécuriser ailleurs
 		//Class for name pour charger le pilote de mysql
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -38,9 +38,7 @@ public class DBA {
 			e.printStackTrace();
 		}
 		
-		
 		return connection;
-		
 		
 	}
 	
