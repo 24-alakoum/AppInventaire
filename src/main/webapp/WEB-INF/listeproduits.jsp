@@ -239,12 +239,12 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 	<div class="container">
 
     <h2 class="page-title">
-        <i class="fa-solid fa-users"></i> Liste des utilisateurs
+        <i class="fa-solid fa-users"></i> Liste des des produits
     </h2>
 
     <div class="top-actions">
-        <a href="Inscription" class="btn-add">
-            <i class="fa-solid fa-user-plus"></i> Ajouter un utilisateur
+        <a href="AjouterProduit" class="btn-add">
+            <i class="fa-solid fa-user-plus"></i> Ajouter un produit
         </a>
 
         <a href="index.jsp" class="btn-home">
@@ -255,29 +255,23 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     <table class="styled-table">
         <thead>
             <tr>
-                <th>Id user</th>
+                <th>Id Produit</th>
                 <th>Nom</th>
-                <th>Prénom</th>
-                <th>Email</th>
-                <th>Téléphone</th>
                 <th>Actions</th>
             </tr>
         </thead>
 
         <tbody>
-            <c:forEach var="u" items="${luser}">
+            <c:forEach var="u" items="${lprod}">
                 <tr>
-                    <td>${u.id}</td>
-                    <td>${u.nom}</td>
-                    <td>${u.prenom}</td>
-                    <td>${u.email}</td>
-                    <td>${u.telephone}</td>
+                    <td>${u.idProduct}</td>
+                    <td>${u.productName}</td>
                     <td class="actions">
-                        <a href="ModifierUser?param=${u.id}" class="btn-edit">
+                        <a href="ModifierProduit?param=${u.idProduct}" class="btn-edit">
                             <i class="fa-solid fa-pen"></i>
                         </a>
 
-                        <a href="SupprimerUser?param=${u.id}" class="btn-delete" onclick="return confirm('Vous etez sur , cette action est irreversible !!!')">
+                        <a href="SupprimerProduit?param=${u.idProduct}" class="btn-delete" onclick="return confirm('Vous etez sur , cette action est irreversible !!!')">
                             <i class="fa-solid fa-trash"></i>
                         </a>
                     </td>

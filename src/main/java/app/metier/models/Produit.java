@@ -40,10 +40,23 @@ public class Produit {
 		
 		try {
 			pst = connection.prepareStatement(sql);
-			pst.setString(1,pd.getProductName());
+			pst.setString(1, pd.getProductName());
 			int i = pst.executeUpdate();
 			if(i!=0) System.out.println("Reussi !");
 			else System.out.println(" non reussi !");
+			if(pst!= null) {
+			    try {
+			        pst.close();
+			    } catch ( SQLException ignore ) {
+		}
+		if(connection != null) {
+			try {
+				connection.close();
+			}
+			catch(SQLException ignore) {
+				
+			}
+		}}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -51,7 +64,7 @@ public class Produit {
 	}
 	
 	//Mehode get data
-	public List<Produit> getProduits(Produit pd){
+	public List<Produit> getProduits(){
 		List<Produit> lpds = new ArrayList<Produit>();
 		String sql = "SELECT * from  produit";
 		Connection connection =null;
@@ -65,13 +78,22 @@ public class Produit {
 			rs = pst.executeQuery(sql);
 			while(rs.next()) {
 				Produit  pds = new Produit();
-				pds.setIdProduct(rs.getInt(1));
-				pds.setProductName(rs.getString(2));
+				pds.setIdProduct(rs.getInt("idproduit"))	;
+				pds.setProductName(rs.getString("nomProduit"));
 				lpds.add(pds);
-				rs.close();
-				pst.close();
-				connection.close();
 			}
+			if(rs!= null) {
+			    try {
+			        rs.close();
+			    } catch ( SQLException ignore ) {}
+			}
+			if(pst!= null) {
+			    try {
+			        pst.close();
+			    } catch ( SQLException ignore ) {}
+			}
+			connection.close();
+		
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

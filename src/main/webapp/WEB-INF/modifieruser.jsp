@@ -172,7 +172,7 @@ a:hover {
 			</p>
 		
 			<p class="btn">
-				<input type="submit" name="mod" value="Valider" class=".btn-success"/>
+				<input type="submit" name="mod" value="Valider" class="btn-success"/>
 				<input type="reset" name="res" value="Annuler"/>
 			</p>
 		</fieldset>

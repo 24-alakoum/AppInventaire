@@ -151,7 +151,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 
         <div class="form-group">
             <label for="telephone">Téléphone d'utilisateur</label>
-            <input type="text" id="telephone" name="telephone" value="${param.telephone }" maxlength="20" />
+            <input type="text" id="telephone" name="telephone" value="" maxlength="20" />
             <span class="erreur">${erreurs['telephone']}</span>
         </div>
 
