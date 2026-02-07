@@ -5,18 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>App Inventaire</title>
-<<<<<<< HEAD
-</head>
-<body>
-<div class="container">
-	<%@ include file="/WEB-INF/header.jsp" %>
-	<%@ include file="/WEB-INF/asside.jsp" %>
-	<div class="content">
-		
-	</div>
-	<%@ include file="/WEB-INF/footer.jsp" %>
-</div>
-=======
+
 <link rel="stylesheet" type="text/css" href="../CSS/home.css">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <style type="text/css">
