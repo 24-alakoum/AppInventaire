@@ -81,28 +81,23 @@ public class Produit {
 				pds.setIdProduct(rs.getInt("idproduit"))	;
 				pds.setProductName(rs.getString("nomProduit"));
 				lpds.add(pds);
-<<<<<<< HEAD
+
 			}
-			if(rs!= null) {
-			    try {
-			        rs.close();
-			    } catch ( SQLException ignore ) {}
 			}
-			if(pst!= null) {
-			    try {
-			        pst.close();
-			    } catch ( SQLException ignore ) {}
-			}
-			connection.close();
-		
-=======
-				
-			}
-			
-			rs.close();
-			pst.close();
-			connection.close();
->>>>>>> 6ffefa34d5963202e4a196e2370154593b240843
+finally {
+    try {
+        if (rs != null) rs.close();
+    } catch (SQLException ignore) {}
+
+    try {
+        if (pst != null) pst.close();
+    } catch (SQLException ignore) {}
+
+    try {
+        if (connection != null) connection.close();
+    } catch (SQLException ignore) {}
+}
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
