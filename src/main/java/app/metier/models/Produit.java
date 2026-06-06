@@ -33,32 +33,14 @@ public class Produit {
 	//Crearion de la methode enregistrer*
 	public void enregistrer(Produit pd) {
 		String sql = "INSERT INTO produit(nomProduit) VALUES(?)";
-		Connection connection =null;
 		DBA bd = new DBA();
-		connection = bd.seconnecter();
-		PreparedStatement pst = null;
 		
-		try {
-			pst = connection.prepareStatement(sql);
+		try (Connection connection = bd.seconnecter();
+			 PreparedStatement pst = connection.prepareStatement(sql)) {
 			pst.setString(1, pd.getProductName());
 			int i = pst.executeUpdate();
-			if(i!=0) System.out.println("Reussi !");
-			else System.out.println(" non reussi !");
-			if(pst!= null) {
-			    try {
-			        pst.close();
-			    } catch ( SQLException ignore ) {
-		}
-		if(connection != null) {
-			try {
-				connection.close();
-			}
-			catch(SQLException ignore) {
-				
-			}
-		}}
+			if(i!=0) System.out.println("Enregistrement produit réussi !");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -66,43 +48,67 @@ public class Produit {
 	//Mehode get data
 	public List<Produit> getProduits(){
 		List<Produit> lpds = new ArrayList<Produit>();
-		String sql = "SELECT * from  produit";
-		Connection connection =null;
+		String sql = "SELECT * from produit ORDER BY nomProduit ASC";
 		DBA bd = new DBA();
-		connection = bd.seconnecter();
-		Statement pst = null;
-		ResultSet rs = null;
 		
-		try {
-			pst = connection.createStatement();
-			rs = pst.executeQuery(sql);
+		try (Connection connection = bd.seconnecter();
+			 Statement st = connection.createStatement();
+			 ResultSet rs = st.executeQuery(sql)) {
 			while(rs.next()) {
-				Produit  pds = new Produit();
-				pds.setIdProduct(rs.getInt("idproduit"))	;
+				Produit pds = new Produit();
+				pds.setIdProduct(rs.getInt("idproduit"));
 				pds.setProductName(rs.getString("nomProduit"));
 				lpds.add(pds);
-
 			}
-		
- {
-    try {
-        if (rs != null) rs.close();
-    } catch (SQLException ignore) {}
-
-    try {
-        if (pst != null) pst.close();
-    } catch (SQLException ignore) {}
-
-    try {
-        if (connection != null) connection.close();
-    } catch (SQLException ignore) {}
-}
-
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		return lpds;
+	}
+
+	public void updateProduit(Produit pd) {
+		String sql = "UPDATE produit SET nomProduit = ? WHERE idproduit = ?";
+		DBA bd = new DBA();
+		try (Connection connection = bd.seconnecter();
+			 PreparedStatement pst = connection.prepareStatement(sql)) {
+			pst.setString(1, pd.getProductName());
+			pst.setInt(2, pd.getIdProduct());
+			pst.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void deleteProduit(int id) {
+		String sql = "DELETE FROM produit WHERE idproduit = ?";
+		DBA bd = new DBA();
+		try (Connection connection = bd.seconnecter();
+			 PreparedStatement pst = connection.prepareStatement(sql)) {
+			pst.setInt(1, id);
+			pst.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public List<Produit> rechercherProduits(String motCle) {
+		List<Produit> lpds = new ArrayList<>();
+		String sql = "SELECT * FROM produit WHERE nomProduit LIKE ? ORDER BY nomProduit ASC";
+		DBA bd = new DBA();
+		try (Connection connection = bd.seconnecter();
+			 PreparedStatement pst = connection.prepareStatement(sql)) {
+			pst.setString(1, "%" + motCle + "%");
+			try (ResultSet rs = pst.executeQuery()) {
+				while (rs.next()) {
+					Produit p = new Produit();
+					p.setIdProduct(rs.getInt("idproduit"));
+					p.setProductName(rs.getString("nomProduit"));
+					lpds.add(p);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return lpds;
 	}
 	

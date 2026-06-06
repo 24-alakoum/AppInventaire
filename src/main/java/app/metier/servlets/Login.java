@@ -73,8 +73,12 @@ public class Login extends HttpServlet {
         //Si la connexion est bon
         HttpSession session = request.getSession();
        session.setAttribute(ATT_SESSION_USER , users);
-       //response.sendRedirect("index.jsp");
-       request.getServletContext().getRequestDispatcher(VUE1).forward(request, response); 
+
+       if ("super".equalsIgnoreCase(users.getRole())) {
+           response.sendRedirect("Lister"); // Or another admin page
+       } else {
+           request.getServletContext().getRequestDispatcher(VUE1).forward(request, response);
+       }
         /*if (user != null) {
             HttpSession session = request.getSession();
             session.setAttribute(ATT_SESSION_USER, user);

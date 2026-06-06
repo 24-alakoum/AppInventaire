@@ -90,7 +90,7 @@ public class User {
 
 	//Methode Enregistrer
 	public void enregistrer(User user) {
-		String sql = "INSERT INTO utilisateur(nom ,prenom, email,mot_de_passe,telephone) VALUES(?,?,?,?,?)";
+		String sql = "INSERT INTO utilisateur(nom ,prenom, email,mot_de_passe,telephone,role) VALUES(?,?,?,?,?,?)";
 		Connection connection =null;
 		DBA bd = new DBA();
 		connection = bd.seconnecter();
@@ -102,7 +102,7 @@ public class User {
 			pst.setString(3,user.getEmail());
 			pst.setString(4, user.getMot_de_passe());
 			pst.setString(5, user.getTelephone());
-			//.setString(6, user.getRole());
+			pst.setString(6, user.getRole() != null ? user.getRole() : "standard");
 			int i = pst.executeUpdate();
 			if(i != 0) System.out.println("Enregistrement effectué !");
 			else System.out.println("Enregistrement non effectué !");
@@ -141,13 +141,13 @@ public class User {
 			rs = pst.executeQuery(sql);
 			while(rs.next()) {
 				User user = new User();
-				user.setId(rs.getLong(1));
-				user.setNom(rs.getString(2));
-				user.setPrenom(rs.getString(3));
-				user.setEmail(rs.getString(4));
-				user.setMot_de_passe(rs.getString(5));
-				user.setTelephone(rs.getString(6));
-				//user.setRole(rs.getString(7));
+				user.setId(rs.getLong("idutilisateur"));
+				user.setNom(rs.getString("nom"));
+				user.setPrenom(rs.getString("prenom"));
+				user.setEmail(rs.getString("email"));
+				user.setMot_de_passe(rs.getString("mot_de_passe"));
+				user.setTelephone(rs.getString("telephone"));
+				user.setRole(rs.getString("role"));
 				luser.add(user);
 			}
 			if(rs!= null) {
@@ -176,7 +176,7 @@ public class User {
 	}//Fin de la methode getUser
 	
 	public void updateUser(User user,long id) {
-		String sql = "UPDATE utilisateur SET nom = ? , prenom =?  ,email=? , mot_de_passe =? ,telephone =? WHERE ( idutilisateur=?)";
+		String sql = "UPDATE utilisateur SET nom = ? , prenom =?  ,email=? , mot_de_passe =? ,telephone =? , role=? WHERE ( idutilisateur=?)";
 		Connection connection =null;
 		DBA bd = new DBA();
 		connection = bd.seconnecter();
@@ -188,7 +188,8 @@ public class User {
 			pst.setString(3,user.getEmail());
 			pst.setString(4, user.getMot_de_passe());
 			pst.setString(5, user.getTelephone());
-			pst.setLong(6, user.getId());
+			pst.setString(6, user.getRole());
+			pst.setLong(7, user.getId());
 			int i = pst.executeUpdate();
 			if(i!= 0) System.out.println("Modification reusie !");
 			else System.out.println("Modification non reusie !");
@@ -266,12 +267,13 @@ public class User {
 			rs = pst.executeQuery();
 			if(rs.next()) {
 				User u = new User();
-				u.setId(rs.getLong(1));
-				u.setNom(rs.getString(2));
-				u.setPrenom(rs.getString(3));
-				u.setEmail(rs.getString(4));
-				u.setMot_de_passe(rs.getString(5));
-				u.setTelephone(rs.getString(6));
+				u.setId(rs.getLong("idutilisateur"));
+				u.setNom(rs.getString("nom"));
+				u.setPrenom(rs.getString("prenom"));
+				u.setEmail(rs.getString("email"));
+				u.setMot_de_passe(rs.getString("mot_de_passe"));
+				u.setTelephone(rs.getString("telephone"));
+				u.setRole(rs.getString("role"));
 				return u;
 					
 			}
@@ -316,12 +318,13 @@ public User userById(int id){
 			rs = pst.executeQuery();
 			if(rs.next()) {
 				User u = new User();
-				u.setId(rs.getLong(1));
-				u.setNom(rs.getString(2));
-				u.setPrenom(rs.getString(3));
-				u.setEmail(rs.getString(4));
-				u.setMot_de_passe(rs.getString(5));
-				u.setTelephone(rs.getString(6));
+				u.setId(rs.getLong("idutilisateur"));
+				u.setNom(rs.getString("nom"));
+				u.setPrenom(rs.getString("prenom"));
+				u.setEmail(rs.getString("email"));
+				u.setMot_de_passe(rs.getString("mot_de_passe"));
+				u.setTelephone(rs.getString("telephone"));
+				u.setRole(rs.getString("role"));
 				return u;
 					
 			}
@@ -352,4 +355,38 @@ public User userById(int id){
 
 
 
+	public List<User> rechercherUsers(String motCle) {
+		List<User> luser = new ArrayList<User>();
+		String sql = "SELECT * FROM utilisateur WHERE nom LIKE ? OR prenom LIKE ? OR email LIKE ? order by idutilisateur desc";
+		Connection connection = null;
+		DBA bd = new DBA();
+		connection = bd.seconnecter();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		try {
+			pst = connection.prepareStatement(sql);
+			pst.setString(1, "%" + motCle + "%");
+			pst.setString(2, "%" + motCle + "%");
+			pst.setString(3, "%" + motCle + "%");
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				User user = new User();
+				user.setId(rs.getLong("idutilisateur"));
+				user.setNom(rs.getString("nom"));
+				user.setPrenom(rs.getString("prenom"));
+				user.setEmail(rs.getString("email"));
+				user.setMot_de_passe(rs.getString("mot_de_passe"));
+				user.setTelephone(rs.getString("telephone"));
+				user.setRole(rs.getString("role"));
+				luser.add(user);
+			}
+			if (rs != null) try { rs.close(); } catch (SQLException ignore) {}
+			if (pst != null) try { pst.close(); } catch (SQLException ignore) {}
+			if (connection != null) try { connection.close(); } catch (SQLException ignore) {}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return luser;
+	}
 }

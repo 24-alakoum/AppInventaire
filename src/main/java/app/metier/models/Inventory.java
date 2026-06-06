@@ -16,6 +16,17 @@ public class Inventory {
 	private int idinventaire; 
 	private int idutilisateur;
 	private Date dateInventaire;
+	private String nomComptable;
+	private String nomBoutique;
+	private String quartier;
+	private double creditsClients;
+	private double dettesFournisseurs;
+	private double ancienCompte;
+	private double montantTotal;
+	private double benefice;
+	private double partGerant;
+	private double partProprietaire;
+	private double departSomme;
 	
 	
 
@@ -48,7 +59,93 @@ public class Inventory {
 		this.dateInventaire = dateInventaire;
 	}
 
+	public String getNomComptable() {
+		return nomComptable;
+	}
 
+	public void setNomComptable(String nomComptable) {
+		this.nomComptable = nomComptable;
+	}
+
+	public String getNomBoutique() {
+		return nomBoutique;
+	}
+
+	public void setNomBoutique(String nomBoutique) {
+		this.nomBoutique = nomBoutique;
+	}
+
+	public String getQuartier() {
+		return quartier;
+	}
+
+	public void setQuartier(String quartier) {
+		this.quartier = quartier;
+	}
+
+	public double getCreditsClients() {
+		return creditsClients;
+	}
+
+	public void setCreditsClients(double creditsClients) {
+		this.creditsClients = creditsClients;
+	}
+
+	public double getDettesFournisseurs() {
+		return dettesFournisseurs;
+	}
+
+	public void setDettesFournisseurs(double dettesFournisseurs) {
+		this.dettesFournisseurs = dettesFournisseurs;
+	}
+
+	public double getAncienCompte() {
+		return ancienCompte;
+	}
+
+	public void setAncienCompte(double ancienCompte) {
+		this.ancienCompte = ancienCompte;
+	}
+
+	public double getMontantTotal() {
+		return montantTotal;
+	}
+
+	public void setMontantTotal(double montantTotal) {
+		this.montantTotal = montantTotal;
+	}
+
+	public double getBenefice() {
+		return benefice;
+	}
+
+	public void setBenefice(double benefice) {
+		this.benefice = benefice;
+	}
+
+	public double getPartGerant() {
+		return partGerant;
+	}
+
+	public void setPartGerant(double partGerant) {
+		this.partGerant = partGerant;
+	}
+
+	public double getPartProprietaire() {
+		return partProprietaire;
+	}
+
+	public void setPartProprietaire(double partProprietaire) {
+		this.partProprietaire = partProprietaire;
+	}
+
+	public double getDepartSomme() {
+		return departSomme;
+	}
+
+	public void setDepartSomme(double departSomme) {
+		this.departSomme = departSomme;
+	}
 
 	public Inventory() {
 		// TODO Auto-generated constructor stub
@@ -56,29 +153,42 @@ public class Inventory {
 	
 	// debut CRUD
 	//ENREGISTREMENT
-	public void enregistrerInventaire(Inventory inv) {
-		String sql = "INSERT INTO inventaire(idutilisateur,dateInventaire) VALUES(?,?)";
-		Connection connection =null;
+	public int enregistrerInventaire(Inventory inv) {
+		String sql = "INSERT INTO inventaire(idutilisateur,dateInventaire,nomComptable,nomBoutique,quartier,creditsClients,dettesFournisseurs,ancienCompte,montantTotal,benefice,partGerant,partProprietaire,departSomme) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		DBA bd = new DBA();
-		connection = bd.seconnecter();
-		PreparedStatement pst = null;
+		int generatedId = -1;
 		
-		try {
-			pst = connection.prepareStatement(sql);
+		try (Connection connection = bd.seconnecter();
+			 PreparedStatement pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 			pst.setInt(1, inv.getIdutilisateur());
 			pst.setDate(2, new java.sql.Date(inv.getDateInventaire().getTime()));
+			pst.setString(3, inv.getNomComptable());
+			pst.setString(4, inv.getNomBoutique());
+			pst.setString(5, inv.getQuartier());
+			pst.setDouble(6, inv.getCreditsClients());
+			pst.setDouble(7, inv.getDettesFournisseurs());
+			pst.setDouble(8, inv.getAncienCompte());
+			pst.setDouble(9, inv.getMontantTotal());
+			pst.setDouble(10, inv.getBenefice());
+			pst.setDouble(11, inv.getPartGerant());
+			pst.setDouble(12, inv.getPartProprietaire());
+			pst.setDouble(13, inv.getDepartSomme());
 
-			if(pst.executeUpdate()!=0) {
-				System.out.println("D�claration engist�e avec succ�s ");
-			}else {
-				System.out.println("D�claration non enregistr�e");
+			if(pst.executeUpdate() != 0) {
+				System.out.println("Déclaration enregistrée avec succès");
+				try (ResultSet rs = pst.getGeneratedKeys()) {
+					if (rs.next()) {
+						generatedId = rs.getInt(1);
+					}
+				}
+			} else {
+				System.out.println("Déclaration non enregistrée");
 			}
-			pst.close(); connection.close();
 		} catch (SQLException e) {
-			System.out.println("Une erreur s'est produite"+e.getMessage());
+			System.out.println("Une erreur s'est produite: " + e.getMessage());
 			e.printStackTrace();
 		}
-		
+		return generatedId;
 	}// Fin Enregistrement
 	
 	// Debut recuperation
@@ -98,9 +208,20 @@ public class Inventory {
 			rslt = st.executeQuery(sql);
 			while(rslt.next()) {
 				Inventory invent = new Inventory();
-				invent.setIdinventaire(rslt.getInt(1));
-				invent.setIdutilisateur(rslt.getInt(2));
-				invent.setDateInventaire(rslt.getDate(3));
+				invent.setIdinventaire(rslt.getInt("idinventaire"));
+				invent.setIdutilisateur(rslt.getInt("idutilisateur"));
+				invent.setDateInventaire(rslt.getDate("dateInventaire"));
+				invent.setNomComptable(rslt.getString("nomComptable"));
+				invent.setNomBoutique(rslt.getString("nomBoutique"));
+				invent.setQuartier(rslt.getString("quartier"));
+				invent.setCreditsClients(rslt.getDouble("creditsClients"));
+				invent.setDettesFournisseurs(rslt.getDouble("dettesFournisseurs"));
+				invent.setAncienCompte(rslt.getDouble("ancienCompte"));
+				invent.setMontantTotal(rslt.getDouble("montantTotal"));
+				invent.setBenefice(rslt.getDouble("benefice"));
+				invent.setPartGerant(rslt.getDouble("partGerant"));
+				invent.setPartProprietaire(rslt.getDouble("partProprietaire"));
+				invent.setDepartSomme(rslt.getDouble("departSomme"));
 				
 				linv.add(invent);
 			}
@@ -120,7 +241,7 @@ public class Inventory {
 	// Mise a jour inventaire
 	
 	public void updateInventaire(Inventory inve , int idinventaire) {
-		String sql = "UPDATE inventaire SET idutilisateur = ?  dateInventaire =? WHERE ( idinventaire=?)";
+		String sql = "UPDATE inventaire SET idutilisateur = ?, dateInventaire =?, nomComptable=?, nomBoutique=?, quartier=?, creditsClients=?, dettesFournisseurs=?, ancienCompte=?, montantTotal=?, benefice=?, partGerant=?, partProprietaire=?, departSomme=? WHERE ( idinventaire=?)";
 		Connection connection =null;
 		DBA bd = new DBA();
 		connection = bd.seconnecter();
@@ -129,7 +250,18 @@ public class Inventory {
 			pst = connection.prepareStatement(sql);
 			pst.setInt(1,inve.getIdutilisateur());
 			pst.setDate(2, new java.sql.Date(inve.getDateInventaire().getTime()));
-			pst.setInt(3,idinventaire);
+			pst.setString(3, inve.getNomComptable());
+			pst.setString(4, inve.getNomBoutique());
+			pst.setString(5, inve.getQuartier());
+			pst.setDouble(6, inve.getCreditsClients());
+			pst.setDouble(7, inve.getDettesFournisseurs());
+			pst.setDouble(8, inve.getAncienCompte());
+			pst.setDouble(9, inve.getMontantTotal());
+			pst.setDouble(10, inve.getBenefice());
+			pst.setDouble(11, inve.getPartGerant());
+			pst.setDouble(12, inve.getPartProprietaire());
+			pst.setDouble(13, inve.getDepartSomme());
+			pst.setInt(14,idinventaire);
 			int i = pst.executeUpdate();
 			if(i!= 0) System.out.println("Modification reusie !");
 			else System.out.println("Modification non reusie !");
@@ -185,10 +317,20 @@ public class Inventory {
 			rs = pst.executeQuery();
 			
 			while(rs.next()) {
-				inve.setIdinventaire(rs.getInt(1));
-				inve.setIdutilisateur(rs.getInt(2));
-				inve.setDateInventaire(rs.getDate(3));
-				
+				inve.setIdinventaire(rs.getInt("idinventaire"));
+				inve.setIdutilisateur(rs.getInt("idutilisateur"));
+				inve.setDateInventaire(rs.getDate("dateInventaire"));
+				inve.setNomComptable(rs.getString("nomComptable"));
+				inve.setNomBoutique(rs.getString("nomBoutique"));
+				inve.setQuartier(rs.getString("quartier"));
+				inve.setCreditsClients(rs.getDouble("creditsClients"));
+				inve.setDettesFournisseurs(rs.getDouble("dettesFournisseurs"));
+				inve.setAncienCompte(rs.getDouble("ancienCompte"));
+				inve.setMontantTotal(rs.getDouble("montantTotal"));
+				inve.setBenefice(rs.getDouble("benefice"));
+				inve.setPartGerant(rs.getDouble("partGerant"));
+				inve.setPartProprietaire(rs.getDouble("partProprietaire"));
+				inve.setDepartSomme(rs.getDouble("departSomme"));
 			}
 			pst.close();connection.close();
 
@@ -230,4 +372,51 @@ public class Inventory {
 
 	
 
+	public List<Inventory> filterAndSortInventory(Integer userId, String sortBy, String order) {
+		List<Inventory> linv = new ArrayList<Inventory>();
+		DBA bd = new DBA();
+
+		// Whitelist for sorting to prevent SQL injection
+		String validSortBy = "idinventaire";
+		if ("dateInventaire".equals(sortBy)) validSortBy = "dateInventaire";
+		else if ("montantTotal".equals(sortBy)) validSortBy = "montantTotal";
+		else if ("benefice".equals(sortBy)) validSortBy = "benefice";
+
+		String validOrder = "DESC";
+		if ("ASC".equalsIgnoreCase(order)) validOrder = "ASC";
+
+		String sql = "SELECT * FROM inventaire" + (userId != null ? " WHERE idutilisateur = ?" : "") + " ORDER BY " + validSortBy + " " + validOrder;
+
+		try (Connection connection = bd.seconnecter();
+			 PreparedStatement pst = connection.prepareStatement(sql)) {
+
+			if (userId != null) {
+				pst.setInt(1, userId);
+			}
+
+			try (ResultSet rslt = pst.executeQuery()) {
+				while (rslt.next()) {
+					Inventory invent = new Inventory();
+					invent.setIdinventaire(rslt.getInt("idinventaire"));
+					invent.setIdutilisateur(rslt.getInt("idutilisateur"));
+					invent.setDateInventaire(rslt.getDate("dateInventaire"));
+					invent.setNomComptable(rslt.getString("nomComptable"));
+					invent.setNomBoutique(rslt.getString("nomBoutique"));
+					invent.setQuartier(rslt.getString("quartier"));
+					invent.setCreditsClients(rslt.getDouble("creditsClients"));
+					invent.setDettesFournisseurs(rslt.getDouble("dettesFournisseurs"));
+					invent.setAncienCompte(rslt.getDouble("ancienCompte"));
+					invent.setMontantTotal(rslt.getDouble("montantTotal"));
+					invent.setBenefice(rslt.getDouble("benefice"));
+					invent.setPartGerant(rslt.getDouble("partGerant"));
+					invent.setPartProprietaire(rslt.getDouble("partProprietaire"));
+					invent.setDepartSomme(rslt.getDouble("departSomme"));
+					linv.add(invent);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return linv;
+	}
 }

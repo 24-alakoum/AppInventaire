@@ -214,6 +214,9 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
  
 </head>
 <body>
+<c:if test="${ empty sessionScope.sessionUtilisateur }">
+    <jsp:forward page="landing.jsp" />
+</c:if>
 <div>
 	<c:if test="${ !empty sessionScope.sessionUtilisateur }">
 	<h2 class="h2">Bienvenue  ${sessionScope.sessionUtilisateur.nom.toUpperCase() } sur notre site d'application d'inventaire</h2>
@@ -230,19 +233,21 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 		
 		<nav>
     <ul>
+        <c:if test="${sessionScope.sessionUtilisateur.role == 'super'}">
         <li>
             <a href="Lister">
-                <i class="fa-solid fa-list"></i> Afficher
+                <i class="fa-solid fa-users"></i> Utilisateurs
             </a>
         </li>
+        </c:if>
         <li>
             <a href="#accueil">
                 <i class="fa-solid fa-house"></i> Accueil
             </a>
         </li>
         <li>
-            <a href="#">
-                <i class="fa-solid fa-warehouse"></i> Inventaire
+            <a href="ListerInventaires">
+                <i class="fa-solid fa-warehouse"></i> Mes Inventaires
             </a>
         </li>
         <li>
