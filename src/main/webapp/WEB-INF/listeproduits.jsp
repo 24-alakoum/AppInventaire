@@ -239,17 +239,22 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 	<div class="container">
 
     <h2 class="page-title">
-        <i class="fa-solid fa-users"></i> Liste des des produits
+        <i class="fa-solid fa-box-open"></i> Liste des produits
     </h2>
 
-    <div class="top-actions">
-        <a href="AjouterProduit" class="btn-add">
-            <i class="fa-solid fa-user-plus"></i> Ajouter un produit
-        </a>
-
-        <a href="index.jsp" class="btn-home">
-            <i class="fa-solid fa-house"></i> Accueil
-        </a>
+    <div class="top-actions" style="flex-direction: column; gap: 15px;">
+        <div style="display: flex; justify-content: space-between;">
+            <a href="AjouterProduit" class="btn-add">
+                <i class="fa-solid fa-plus"></i> Ajouter un produit
+            </a>
+            <a href="index.jsp" class="btn-home">
+                <i class="fa-solid fa-house"></i> Accueil
+            </a>
+        </div>
+        <form action="ListerProd" method="get" style="display: flex; gap: 10px;">
+            <input type="text" name="motCle" placeholder="Rechercher un produit..." style="margin-bottom: 0;">
+            <button type="submit" class="btn-add" style="border: none; cursor: pointer; width: auto;">Rechercher</button>
+        </form>
     </div>
 
     <table class="styled-table">

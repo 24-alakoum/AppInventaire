@@ -31,11 +31,16 @@ public class ListerProd extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		Produit produit = new Produit();
-		List<Produit> lprod = new ArrayList< Produit>();
-		lprod = produit.getProduits();
+		String motCle = request.getParameter("motCle");
+		Produit produitModel = new Produit();
+		List<Produit> lprod;
+
+		if (motCle != null && !motCle.isEmpty()) {
+			lprod = produitModel.rechercherProduits(motCle);
+		} else {
+			lprod = produitModel.getProduits();
+		}
+
 		request.setAttribute("lprod", lprod);
 		request.getServletContext().getRequestDispatcher("/WEB-INF/listeproduits.jsp").forward(request,response);
 	}
