@@ -170,10 +170,17 @@ a:hover {
 				<label for="telephone">Telephone</label>
 				<input type="text" name="telephone" id="telephone" value="${userid.telephone }"/>
 			</p>
+			<p>
+				<label for="role">Rôle</label>
+				<select name="role" id="role">
+					<option value="standard" ${userid.role == 'standard' ? 'selected' : ''}>Standard</option>
+					<option value="super" ${userid.role == 'super' ? 'selected' : ''}>Super User</option>
+				</select>
+			</p>
 		
 			<p class="btn">
 				<input type="submit" name="mod" value="Valider" class="btn-success"/>
-				<input type="reset" name="res" value="Annuler"/>
+				<a href="Lister" class="btn" style="text-align: center; text-decoration: none; display: block; background: #64748b; color: white; margin-top: 10px;">Annuler</a>
 			</p>
 		</fieldset>
 	</form>

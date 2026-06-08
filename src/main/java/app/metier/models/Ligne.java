@@ -107,21 +107,18 @@ public class Ligne {
 	}*/
 	
 	public void enregistrer(Ligne ut) {
-		Connection connection =null;
 		DBA bd = new DBA();
-		connection = bd.seconnecter();
 		String sql="insert into ligneinventaire(idinventaire, idproduit, quantite, prix) values(?, ?, ?, ?)";
-		int i=0;
-		try(PreparedStatement pr=connection.prepareStatement(sql)) {
+		try (Connection connection = bd.seconnecter();
+			 PreparedStatement pr = connection.prepareStatement(sql)) {
 			pr.setInt(1, ut.getIdinventaire());
 			pr.setInt(2, ut.getIdproduit());
 			pr.setDouble(3, ut.getQuantite());
 			pr.setDouble(4, ut.getPrix());
-			i=pr.executeUpdate();
-			if(i!=0) System.out.println("Enregistrement effectu� ! ");
-			
+			int i = pr.executeUpdate();
+			if(i!=0) System.out.println("Enregistrement ligne effectué ! ");
 		} catch (SQLException e) {
-			System.out.println("Enregistrement non effectu� ! ");
+			System.out.println("Enregistrement ligne non effectué ! ");
 			e.printStackTrace();
 		}
 	}
@@ -155,71 +152,56 @@ public class Ligne {
 	}
 	
 public void deleteLine(long idl) {
-	Connection connection =null;
 	DBA bd = new DBA();
-	connection = bd.seconnecter();
 	String sql="delete from ligneinventaire where(idligneInventaire=?)";
-	PreparedStatement pr;
-	int a=0;
-	try {
-		pr=connection.prepareStatement(sql);
+	try (Connection connection = bd.seconnecter();
+		 PreparedStatement pr = connection.prepareStatement(sql)) {
 		pr.setLong(1, idl);
-		a=pr.executeUpdate();
-		if(a!=0)System.out.println("Op�ration effectu�e ! ");
-		pr.close(); connection.close();
+		int a = pr.executeUpdate();
+		if(a!=0) System.out.println("Opération ligne effectuée ! ");
 	} catch (SQLException e) {
-		System.out.println("Op�ration non effectu�e ! ");
+		System.out.println("Opération ligne non effectuée ! ");
 		e.printStackTrace();
 	}
 }
 
 
 public Ligne getIdlignePourModif(long idl) {
-	Connection connection =null;
 	DBA bd = new DBA();
-	connection = bd.seconnecter();
-	Ligne abc=new Ligne();
+	Ligne abc = new Ligne();
 	String sql="select * from ligneinventaire where(idligneInventaire=?)";
-	PreparedStatement st;
-	ResultSet rs=null;
-	
-	try {
-		st=connection.prepareStatement(sql);
+	try (Connection connection = bd.seconnecter();
+		 PreparedStatement st = connection.prepareStatement(sql)) {
 		st.setLong(1, idl);
-		rs=st.executeQuery();
-		while(rs.next()) {
-			abc.setIdligneInventaire(rs.getLong(1));
-			abc.setIdinventaire(rs.getInt(2));
-			abc.setIdproduit(rs.getInt(3));
-			abc.setQuantite(rs.getDouble(4));
-			abc.setPrix(rs.getDouble(5));
-			System.out.println("Op�ration effectu�e ! ");
-		}st.close(); rs.close(); connection.close();
+		try (ResultSet rs = st.executeQuery()) {
+			while(rs.next()) {
+				abc.setIdligneInventaire(rs.getLong("idligneInventaire"));
+				abc.setIdinventaire(rs.getInt("idinventaire"));
+				abc.setIdproduit(rs.getInt("idproduit"));
+				abc.setQuantite(rs.getDouble("quantite"));
+				abc.setPrix(rs.getDouble("prix"));
+			}
+		}
 	} catch (SQLException e) {
-		System.out.println("Op�ration non effectu�e ! ");
 		e.printStackTrace();
 	}
-	return abc;}
+	return abc;
+}
 
 public void ModifierLigne(Ligne ln){
-	Connection connection =null;
 	DBA bd = new DBA();
-	connection = bd.seconnecter();
 	String sql="update ligneinventaire set idinventaire=?, idproduit=?, quantite=?, prix=? where(idligneInventaire=?)";
-	PreparedStatement pr;
-	int i=0;
-	try {
-		pr=connection.prepareStatement(sql);
-		pr.setLong(1, ln.getIdinventaire());
+	try (Connection connection = bd.seconnecter();
+		 PreparedStatement pr = connection.prepareStatement(sql)) {
+		pr.setInt(1, ln.getIdinventaire());
 		pr.setInt(2, ln.getIdproduit());
 		pr.setDouble(3, ln.getQuantite());
 		pr.setDouble(4, ln.getPrix());
-		pr.setDouble(5, ln.getIdligneInventaire());
-		i=pr.executeUpdate();
-		if(i!=0) System.out.println("Modification effectu�e ! ");
-		pr.close(); connection.close();
+		pr.setLong(5, ln.getIdligneInventaire());
+		int i = pr.executeUpdate();
+		if(i!=0) System.out.println("Modification ligne effectuée ! ");
 	} catch (SQLException e) {
-		System.out.println("Modification non effectu�e ! ");
+		System.out.println("Modification ligne non effectuée ! ");
 		e.printStackTrace();
 	}
 }

@@ -32,17 +32,16 @@ public class SupprimerInventaire extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int idiventaire = Integer.parseInt(request.getParameter("param"));
+		String idParam = request.getParameter("idinventaire");
+		if (idParam == null) idParam = request.getParameter("param");
 		
-		List <Inventory> l_inve = new ArrayList<Inventory>();
-		Inventory inve = new Inventory();
+		if (idParam != null) {
+			int idiventaire = Integer.parseInt(idParam);
+			Inventory inve = new Inventory();
+			inve.deleteInventaire(idiventaire);
+		}
 		
-		inve.deleteInventaire(idiventaire);
-		l_inve = inve.recupererInventaire();
-		//Placer les donn�es dans la requ�te
-		request.setAttribute("linve", l_inve);
-		//Ouvrir le formulaire
-		request.getServletContext().getRequestDispatcher(VUE).forward(request, response);
+		response.sendRedirect("ListerInventaires");
 	}
 
 	/**

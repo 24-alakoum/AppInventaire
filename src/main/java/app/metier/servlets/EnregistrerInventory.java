@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import app.metier.models.Inventory;
+import app.metier.models.Ligne;
+import app.metier.models.Produit;
 import app.metier.models.User;
 
 /**
@@ -38,19 +40,10 @@ public class EnregistrerInventory extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List <User> luser = new ArrayList<User>();
-		User user = new User();
-		luser = user.getUsers();
+		Produit prodModel = new Produit();
+		List<Produit> lpds = prodModel.getProduits();
 		
-		List<Inventory> linve = new ArrayList<Inventory>();
-		Inventory inve = new Inventory();
-		linve = inve.recupererInventaire();
-		
-		
-		
-		//Placer les donn�es dans la requ�te
-		request.setAttribute("luser", luser);
-		request.setAttribute("linve", linve);
+		request.setAttribute("lpds", lpds);
 		request.getServletContext().getRequestDispatcher(VUE).forward(request, response);
 	}
 
@@ -78,21 +71,71 @@ public class EnregistrerInventory extends HttpServlet {
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String idutilisateur = request.getParameter("idutilisateur");
-		String dateInventaire =request.getParameter("dateInventaire");
+		User sessionUser = (User) request.getSession().getAttribute("sessionUtilisateur");
+		if (sessionUser == null) {
+			response.sendRedirect("Login");
+			return;
+		}
+
+		String dateInventaireStr = request.getParameter("dateInventaire");
+		String nomComptable = request.getParameter("nomComptable");
+		String nomBoutique = request.getParameter("nomBoutique");
+		String quartier = request.getParameter("quartier");
 		
-		
-		//conversion
+		double creditsClients = Double.parseDouble(request.getParameter("creditsClients"));
+		double dettesFournisseurs = Double.parseDouble(request.getParameter("dettesFournisseurs"));
+		double ancienCompte = Double.parseDouble(request.getParameter("ancienCompte"));
+		double montantTotal = Double.parseDouble(request.getParameter("montantTotal"));
+		double benefice = Double.parseDouble(request.getParameter("benefice"));
+		double partGerant = Double.parseDouble(request.getParameter("partGerant"));
+		double partProprietaire = Double.parseDouble(request.getParameter("partProprietaire"));
+		double departSomme = Double.parseDouble(request.getParameter("departSomme"));
+
 		Inventory inve = new Inventory();
-		int c_idutilisateur = Integer.parseInt(idutilisateur);
-		Date c_dateInventaire = strToDate(dateInventaire);
+		inve.setIdutilisateur(sessionUser.getId().intValue());
 		
-		inve.setIdutilisateur(c_idutilisateur);
-		inve.setDateInventaire(c_dateInventaire);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			inve.setDateInventaire(sdf.parse(dateInventaireStr));
+		} catch (ParseException e) {
+			inve.setDateInventaire(new Date());
+		}
 		
-		inve.enregistrerInventaire(inve);
+		inve.setNomComptable(nomComptable);
+		inve.setNomBoutique(nomBoutique);
+		inve.setQuartier(quartier);
+		inve.setCreditsClients(creditsClients);
+		inve.setDettesFournisseurs(dettesFournisseurs);
+		inve.setAncienCompte(ancienCompte);
+		inve.setMontantTotal(montantTotal);
+		inve.setBenefice(benefice);
+		inve.setPartGerant(partGerant);
+		inve.setPartProprietaire(partProprietaire);
+		inve.setDepartSomme(departSomme);
+
+		// 1. Enregistrer l'inventaire pour récupérer son ID
+		int inventoryId = inve.enregistrerInventaire(inve);
+
+		if (inventoryId != -1) {
+			// 2. Enregistrer les lignes
+			String[] productIds = request.getParameterValues("idproduit");
+			String[] quantities = request.getParameterValues("quantite");
+			String[] prices = request.getParameterValues("prix");
+
+			if (productIds != null) {
+				Ligne ligneModel = new Ligne();
+				for (int i = 0; i < productIds.length; i++) {
+					Ligne line = new Ligne();
+					line.setIdinventaire(inventoryId);
+					line.setIdproduit(Integer.parseInt(productIds[i]));
+					line.setQuantite(Double.parseDouble(quantities[i]));
+					line.setPrix(Double.parseDouble(prices[i]));
+					ligneModel.enregistrer(line);
+				}
+			}
+		}
 		
-		doGet(request, response);
+		response.sendRedirect("ListerInventaires");
 	}
 
 }

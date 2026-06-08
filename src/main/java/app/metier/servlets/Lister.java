@@ -31,13 +31,23 @@ public class Lister extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		List<User> luser = new ArrayList<User>();//1.Creer une liste pour stocker les enregistrements
-		User user = new User();//2.Creer une instance du bean
-		luser = user.getUsers();//3.Recuperer les enregistrements de la base
-		request.setAttribute("luser", luser);//4.Placer dans la request
+		User sessionUser = (User) request.getSession().getAttribute("sessionUtilisateur");
+		if (sessionUser == null || !"super".equalsIgnoreCase(sessionUser.getRole())) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "Accès refusé");
+			return;
+		}
+
+		String motCle = request.getParameter("motCle");
+		List<User> luser;
+		User userModel = new User();
+
+		if (motCle != null && !motCle.isEmpty()) {
+			luser = userModel.rechercherUsers(motCle);
+		} else {
+			luser = userModel.getUsers();
+		}
 		
+		request.setAttribute("luser", luser);
 		request.getServletContext().getRequestDispatcher("/WEB-INF/listeusers.jsp").forward(request, response);
 	}
 

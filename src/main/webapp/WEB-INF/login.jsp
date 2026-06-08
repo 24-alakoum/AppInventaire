@@ -10,79 +10,60 @@
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
- <style type="text/css">
- 
- 	fieldset {
- 	
-	display: flex;
-	flex-direction: column;
-	width: 50%;
-	margin:50px  auto;
-	font-family: "Roboto" arial vardana;
-	font-size: 1.2rem;
-	justify-content: center;
-}
-label {
-	text-align: center;
-	
-}
-input {
-	border: 1px outset;
-	box-shadow: 2px 2px 0px black inset;
-	border-radius: 6px;
-	padding: 10px;
-}
-.input{
-	border: none;
-	box-shadow: 6Px 6px 6px rgba(123,35,65,0.5);
-	cursor: pointer;
-	color: white;
-	background: buttonshadow;
-	background-color: skyblue;
-	font-weight: bold;
-	font-size: 1.1rem;
-	transition: all 0.5s;
-}
-.input:hover {
-	background-color: white;
-	color: blue;
-	transform:scale(1);
-	
-}
- 
-
+ <link rel="stylesheet" href="style.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+ <style>
+    body {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    fieldset {
+        margin: 0;
+        width: 400px;
+    }
+    .logo-login {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+        color: #0f172a;
+    }
+    .erreur {
+        color: #ef4444;
+        font-size: 0.875rem;
+        margin-bottom: 10px;
+        display: block;
+    }
  </style>
   
 </head>
 <body>
 	<form action="Login" method="post">
 		<fieldset>
-			<legend class="text-3xl font-bold underline text-blue-500">Connectez-vous</legend>
-			 <p>Vous pouvez vous connecter via ce formulaire.</p>
-			<label id="email">Votre email <span class="requis">*</span> </label>
-			<input type="email" name="email" id="email" required size="50" value="<c:out value="${utilisateur.email}"/>" size="20" 
-maxlength="60" autofocus="autofocus"/>
-<br>
+            <div class="logo-login">
+                <i class="fa-solid fa-boxes-stacked"></i> AppInv
+            </div>
+			<legend>Connexion</legend>
+
+			<label for="email">Email</label>
+			<input type="email" name="email" id="email" required value="<c:out value="${utilisateur.email}"/>" maxlength="60" autofocus/>
 			<span class="erreur">${form.erreurs['email']}</span>
-			<label id="pass">Votre mot de passe <span class="requis">*</span> </label>
-			<input type="password" id="passe" name="passe"  value="" size="20" maxlength="20"/>
-			<br>
-			 <span class="erreur">${form.erreurs['motdepasse']}</span>
-			<input type="submit" value="Se connecter" name="connexion" class="input">
-			<c:if test="${param.error == 'passe' }">
-				<p style="color: red;">Mot de passe incorrect</p>
+
+			<label for="passe">Mot de passe</label>
+			<input type="password" id="passe" name="passe" required maxlength="20"/>
+			<span class="erreur">${form.erreurs['motdepasse']}</span>
+
+			<button type="submit" name="connexion" class="btn-submit">Se connecter</button>
+
+            <c:if test="${param.error == 'passe' }">
+				<p class="erreur text-center mt-4">Mot de passe incorrect</p>
 			</c:if>
-			<p> Si vous etes nouveau cliquez sur </p>
-			<a href="Inscription">Creer un compte</a>
-			<p class="${empty form.erreurs ? 'succes' :'erreur'}">${form.resultat}</p>
-                
-             <%-- Vérification de la présence d'un objet utilisateur en session 
-             <c:if test="${!empty sessionScope.sessionUtilisateur}">
-                     Si l'utilisateur existe en session, alors on affiche son adresse email. 
-                    <p class="succes">Vous êtes connecté(e) avec l'adresse : ${sessionScope.sessionUtilisateur.email}</p> </c:if> --%>
-                
+
+			<p class="text-center mt-4">Nouveau ici ? <a href="Inscription">Créer un compte</a></p>
 		</fieldset>
-	
 	</form>
 </body>
 </html>

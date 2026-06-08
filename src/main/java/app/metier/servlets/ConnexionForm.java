@@ -107,30 +107,30 @@ public class ConnexionForm {
 		
 	}
 	
-	public User userExists(String email,String password) {
-		User luser = new User();
+	public User userExists(String email, String password) {
 		String sql = "SELECT * FROM utilisateur WHERE email=? AND mot_de_passe=?";
-		Connection connection =null;
 		DBA bd = new DBA();
-		connection = bd.seconnecter();
-		PreparedStatement pst = null;
-		ResultSet rs = null;
-		
-		try {
-			pst = connection.prepareStatement(sql);
+		try (Connection connection = bd.seconnecter();
+			 PreparedStatement pst = connection.prepareStatement(sql)) {
 			pst.setString(1, email);
 			pst.setString(2, password);
-			rs = pst.executeQuery();
-			if(rs.next()) {
-				return luser;
+			try (ResultSet rs = pst.executeQuery()) {
+				if (rs.next()) {
+					User u = new User();
+					u.setId(rs.getLong("idutilisateur"));
+					u.setNom(rs.getString("nom"));
+					u.setPrenom(rs.getString("prenom"));
+					u.setEmail(rs.getString("email"));
+					u.setMot_de_passe(rs.getString("mot_de_passe"));
+					u.setTelephone(rs.getString("telephone"));
+					u.setRole(rs.getString("role"));
+					return u;
+				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		return null;
-		
 	}
 	
 

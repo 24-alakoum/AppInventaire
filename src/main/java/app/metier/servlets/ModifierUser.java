@@ -57,8 +57,9 @@ public class ModifierUser extends HttpServlet {
 				String usernom = request.getParameter("name");
 				String userprenom = request.getParameter("prenom");
 				String email =request.getParameter("email");
-				String motdepasse = request.getParameter("motdepasse");
+				String motdepasse = request.getParameter("passe");
 				String telephone = request.getParameter("telephone");
+				String role = request.getParameter("role");
 
 				long id  = Long.parseLong(ID);
 				
@@ -70,6 +71,7 @@ public class ModifierUser extends HttpServlet {
 				users.setEmail(email);
 				users.setMot_de_passe(motdepasse);
 				users.setTelephone(telephone);
+				users.setRole(role);
 				
 				//Enregistrer
 				List<User> luser = new ArrayList<User>();

@@ -39,12 +39,12 @@ public class ModifierInventaire extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//R�cup�rer le param�tre 
+		//Récupérer le paramètre
 		
-		
-		
-				String idinventaire = request.getParameter("param");
-				//R�cup�rer les donn�es de la base
+				String idinventaire = request.getParameter("idinventaire");
+				if (idinventaire == null) idinventaire = request.getParameter("param");
+
+				//Récupérer les données de la base
 						List <Inventory> linve = new ArrayList<Inventory>();
 						
 						Inventory inve = new Inventory();
@@ -68,35 +68,46 @@ public class ModifierInventaire extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// R�cup�rer les donn�es du formulaire
-		String idutilisateur = request.getParameter("idutilisateur");
-		String dateinventaire = request.getParameter("dateinventaire");
-		int idinventaire =  Integer.parseInt(request.getParameter("idinventaire"));
+		int idinventaire = Integer.parseInt(request.getParameter("idinventaire"));
+		String dateInventaireStr = request.getParameter("dateInventaire");
+		String nomComptable = request.getParameter("nomComptable");
+		String nomBoutique = request.getParameter("nomBoutique");
+		String quartier = request.getParameter("quartier");
 		
-		//Convertir les donn�es
-		int c_idutilisateur = Integer.parseInt(idutilisateur);
-		Date c_dateInventaire = strToDate(dateinventaire);
-		
-		//Cr�er l'objet et attribuer les valeurs aux attributs
+		double creditsClients = Double.parseDouble(request.getParameter("creditsClients"));
+		double dettesFournisseurs = Double.parseDouble(request.getParameter("dettesFournisseurs"));
+		double ancienCompte = Double.parseDouble(request.getParameter("ancienCompte"));
+		double montantTotal = Double.parseDouble(request.getParameter("montantTotal"));
+		double benefice = Double.parseDouble(request.getParameter("benefice"));
+		double partGerant = Double.parseDouble(request.getParameter("partGerant"));
+		double partProprietaire = Double.parseDouble(request.getParameter("partProprietaire"));
+		double departSomme = Double.parseDouble(request.getParameter("departSomme"));
+
 		Inventory inv = new Inventory();
+		inv.setIdinventaire(idinventaire);
 		
-		inv.setIdutilisateur(c_idutilisateur);
-		inv.setDateInventaire(c_dateInventaire);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			inv.setDateInventaire(sdf.parse(dateInventaireStr));
+		} catch (ParseException e) {
+			inv.setDateInventaire(new Date());
+		}
 		
-		//appliquer les modifications
-		inv.updateInventaire(inv , idinventaire);
+		inv.setNomComptable(nomComptable);
+		inv.setNomBoutique(nomBoutique);
+		inv.setQuartier(quartier);
+		inv.setCreditsClients(creditsClients);
+		inv.setDettesFournisseurs(dettesFournisseurs);
+		inv.setAncienCompte(ancienCompte);
+		inv.setMontantTotal(montantTotal);
+		inv.setBenefice(benefice);
+		inv.setPartGerant(partGerant);
+		inv.setPartProprietaire(partProprietaire);
+		inv.setDepartSomme(departSomme);
 		
-		//R�cup�rer les donn�es de la base
-		List <Inventory> linv = new ArrayList<Inventory>();
-		inv = inv.getInventoryByIdInventaire(c_idutilisateur);
-		linv = inv.recupererInventaire();
+		inv.updateInventaire(inv, idinventaire);
 		
-		//Placer les donn�es dans la requ�te
-		request.setAttribute("linv", linv);
-		request.setAttribute("inv", inv);
-		
-		//Ouvrir le formulaire
-		request.getServletContext().getRequestDispatcher(VUE1).forward(request, response);
+		response.sendRedirect("ListerInventaires");
 	}
 
 	public Date strToDate(String str) {

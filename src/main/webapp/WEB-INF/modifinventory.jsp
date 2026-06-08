@@ -13,32 +13,64 @@
 <%@ include file="/WEB-INF/asside.jsp" %>
 <div class="content">
 <form action="ModifierInventaire" method="POST">
-		<fieldset>
+		<fieldset style="max-width: 800px;">
 			<legend>Mise à jour Inventaire</legend>
-			<div class="col">
-				<label>N°  d'inventaire</label>
-				<input type="number" name="idinventaire" id="idinventaire" size=20 placeholder="Entrez le numéro de la carte" value="${inve.idinventaire}" readonly  />
-			</div>
+			<input type="hidden" name="idinventaire" value="${inve.idinventaire}" />
 			
-			<div class="col">
-				<select name=idutilisateur>
-				<option value="#">Choisissez un utilisateur</option>
-					<c:forEach items="${luser }" var="user">
-						<option value="${user.id }">${user.prenom }&nbsp;${user.nom }</option>
-					</c:forEach>
-			</select>
-			</div>
-			
-			<div class="ligne">
-				<div class="col">
-					<label>Date d'inventaire</label>
-					<input type="date" name="dateinventaire"  value="<fmt:formatDate value='${inve.dateInventaire}' pattern='yyyy-MM-dd'/>">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <label>Nom du Comptable</label>
+                    <input type="text" name="nomComptable" value="${inve.nomComptable}" required>
 
-				</div>
-			</div>
-			<div class="form-btn">
-				<input type="submit" name="Ok" value="Enregistrer"  />
-				<input type="reset" name="No_Ok" value="Annuler"  />
+                    <label>Boutique</label>
+                    <input type="text" name="nomBoutique" value="${inve.nomBoutique}" required>
+
+                    <label>Quartier</label>
+                    <input type="text" name="quartier" value="${inve.quartier}" required>
+                </div>
+                <div>
+                    <label>Date d'Inventaire</label>
+                    <input type="date" name="dateInventaire" value="<fmt:formatDate value='${inve.dateInventaire}' pattern='yyyy-MM-dd'/>" required>
+
+                    <label>Crédits Clients</label>
+                    <input type="number" step="0.01" name="creditsClients" value="${inve.creditsClients}">
+
+                    <label>Dettes Fournisseurs</label>
+                    <input type="number" step="0.01" name="dettesFournisseurs" value="${inve.dettesFournisseurs}">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                <div>
+                    <label>Ancien Compte</label>
+                    <input type="number" step="0.01" name="ancienCompte" value="${inve.ancienCompte}">
+
+                    <label>Montant Total Articles</label>
+                    <input type="number" step="0.01" name="montantTotal" value="${inve.montantTotal}">
+                </div>
+                <div>
+                    <label>Bénéfice</label>
+                    <input type="number" step="0.01" name="benefice" value="${inve.benefice}">
+
+                    <label>Somme de départ</label>
+                    <input type="number" step="0.01" name="departSomme" value="${inve.departSomme}">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                 <div>
+                    <label>Part Gérant</label>
+                    <input type="number" step="0.01" name="partGerant" value="${inve.partGerant}">
+                </div>
+                <div>
+                    <label>Part Propriétaire</label>
+                    <input type="number" step="0.01" name="partProprietaire" value="${inve.partProprietaire}">
+                </div>
+            </div>
+
+			<div class="form-btn" style="margin-top: 20px; display: flex; gap: 10px;">
+				<button type="submit" class="btn-submit">Enregistrer</button>
+				<a href="ListerInventaires" class="btn-submit" style="background: #64748b; text-align: center; text-decoration: none;">Annuler</a>
 			</div>
 		</fieldset>
 	</form>
