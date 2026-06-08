@@ -111,8 +111,26 @@ public class Produit {
 		}
 		return lpds;
 	}
-	
 
+	public Produit getProduitById(int id) {
+		String sql = "SELECT * FROM produit WHERE idproduit = ?";
+		DBA bd = new DBA();
+		try (Connection connection = bd.seconnecter();
+			 PreparedStatement pst = connection.prepareStatement(sql)) {
+			pst.setInt(1, id);
+			try (ResultSet rs = pst.executeQuery()) {
+				if (rs.next()) {
+					Produit p = new Produit();
+					p.setIdProduct(rs.getInt("idproduit"));
+					p.setProductName(rs.getString("nomProduit"));
+					return p;
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }
 /*idProduct
 productName

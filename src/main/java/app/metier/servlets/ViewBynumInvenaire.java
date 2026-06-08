@@ -32,6 +32,14 @@ public class ViewBynumInvenaire extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String idParam = request.getParameter("idinventaire");
+		if (idParam != null) {
+			int id = Integer.parseInt(idParam);
+			InventoryView invtvModel = new InventoryView();
+			List<InventoryView> linvtv = invtvModel.getInventoryByID(id);
+			request.setAttribute("linvtv", linvtv);
+			request.setAttribute("numRech", id);
+		}
 		request.getServletContext().getRequestDispatcher(VUE).forward(request, response);
 	}
 

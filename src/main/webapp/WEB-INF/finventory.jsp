@@ -110,6 +110,11 @@
 
                         <label>Ancien Compte</label>
                         <input type="number" step="0.01" name="ancienCompte" value="0" onchange="calculateCalculations()">
+
+                        <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="isManagerOwner" name="isManagerOwner" value="true" onchange="calculateCalculations()" style="width: auto; margin-bottom: 0;">
+                            <label for="isManagerOwner" style="margin-bottom: 0;">Le gérant est le propriétaire</label>
+                        </div>
                     </div>
                     <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1;">
                         <p><strong>Bénéfice/Perte: </strong> <span id="beneficeDisplay">0.00</span></p>
@@ -204,12 +209,19 @@
             document.getElementById('beneficeInput').value = benefice;
             document.getElementById('beneficeDisplay').className = benefice >= 0 ? 'badge-success' : 'badge-error';
 
-            // 3. Sharing logic (e.g., 50/50 split if not owner)
+            // 3. Sharing logic
             let partGerant = 0;
             let partProprietaire = 0;
+            const isOwner = document.getElementById('isManagerOwner').checked;
+
             if (benefice > 0) {
-                partGerant = benefice * 0.5;
-                partProprietaire = benefice * 0.5;
+                if (isOwner) {
+                    partGerant = benefice;
+                    partProprietaire = 0;
+                } else {
+                    partGerant = benefice * 0.5;
+                    partProprietaire = benefice * 0.5;
+                }
             }
 
             document.getElementById('partGerantDisplay').innerText = partGerant.toFixed(2);

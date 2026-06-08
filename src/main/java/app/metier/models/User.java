@@ -91,12 +91,9 @@ public class User {
 	//Methode Enregistrer
 	public void enregistrer(User user) {
 		String sql = "INSERT INTO utilisateur(nom ,prenom, email,mot_de_passe,telephone,role) VALUES(?,?,?,?,?,?)";
-		Connection connection =null;
 		DBA bd = new DBA();
-		connection = bd.seconnecter();
-		PreparedStatement pst = null;
-		try {
-			pst = connection.prepareStatement(sql);
+		try (Connection connection = bd.seconnecter();
+			 PreparedStatement pst = connection.prepareStatement(sql)) {
 			pst.setString(1,user.getNom());
 			pst.setString(2, user.getPrenom());
 			pst.setString(3,user.getEmail());
@@ -106,39 +103,19 @@ public class User {
 			int i = pst.executeUpdate();
 			if(i != 0) System.out.println("Enregistrement effectué !");
 			else System.out.println("Enregistrement non effectué !");
-			if(pst!= null) {
-				    try {
-				        pst.close();
-				    } catch ( SQLException ignore ) {
-			}
-			if(connection != null) {
-				try {
-					connection.close();
-				}
-				catch(SQLException ignore) {
-					
-				}
-			}
-		}} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 	}//Fin de la methode enregistrer
 	
 
 	public List<User> getUsers(){
 		List<User> luser = new ArrayList<User>();
 		String sql = "SELECT * FROM utilisateur order by idutilisateur desc";
-		Connection connection =null;
 		DBA bd = new DBA();
-		connection = bd.seconnecter();
-		Statement pst = null;
-		ResultSet rs = null;
-		
-		try {
-			pst = connection.createStatement();
-			rs = pst.executeQuery(sql);
+		try (Connection connection = bd.seconnecter();
+			 Statement st = connection.createStatement();
+			 ResultSet rs = st.executeQuery(sql)) {
 			while(rs.next()) {
 				User user = new User();
 				user.setId(rs.getLong("idutilisateur"));
@@ -150,39 +127,17 @@ public class User {
 				user.setRole(rs.getString("role"));
 				luser.add(user);
 			}
-			if(rs!= null) {
-			    try {
-			        rs.close();
-			    } catch ( SQLException ignore ) {}
-			}
-			if(pst!= null) {
-			    try {
-			        pst.close();
-			    } catch ( SQLException ignore ) {}
-			}    
-		if(connection != null) {
-			try {
-				connection.close();
-			}
-			catch(SQLException ignore) {}
-		}
-			} 
-		catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return luser;
 	}//Fin de la methode getUser
 	
 	public void updateUser(User user,long id) {
 		String sql = "UPDATE utilisateur SET nom = ? , prenom =?  ,email=? , mot_de_passe =? ,telephone =? , role=? WHERE ( idutilisateur=?)";
-		Connection connection =null;
 		DBA bd = new DBA();
-		connection = bd.seconnecter();
-		PreparedStatement pst = null;
-		try {
-			pst = connection.prepareStatement(sql);
+		try (Connection connection = bd.seconnecter();
+			 PreparedStatement pst = connection.prepareStatement(sql)) {
 			pst.setString(1,user.getNom());
 			pst.setString(2, user.getPrenom());
 			pst.setString(3,user.getEmail());
@@ -193,14 +148,10 @@ public class User {
 			int i = pst.executeUpdate();
 			if(i!= 0) System.out.println("Modification reusie !");
 			else System.out.println("Modification non reusie !");
-			pst.close();
-			connection.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			System.out.println("Modification non reusie !" +e.getMessage());
 			e.printStackTrace();
 		}
-		
 	}//Fin de la update
 	/*public User getUserById(int identifiant){
 		String sql = "SELECT * FROM  utilisateur WHERE ( userId=?)";
@@ -232,124 +183,66 @@ public class User {
 	
 	public void deleteUser(int id) {
 		String sql = "DELETE FROM  utilisateur WHERE ( idutilisateur=?)";
-		Connection connection =null;
 		DBA bd = new DBA();
-		connection = bd.seconnecter();
-		PreparedStatement pst = null;
-		
-		try {
-			pst = connection.prepareStatement(sql);
+		try (Connection connection = bd.seconnecter();
+			 PreparedStatement pst = connection.prepareStatement(sql)) {
 			pst.setInt(1, id);
 			int i = pst.executeUpdate();
 			if(i!=0) System.out.println("Element supprimé !");
-			System.out.println("Element non supprimé !");
-			pst.close();
-			connection.close();
+			else System.out.println("Element non supprimé !");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 	
 	public User connecterUser(String em){
-		
-		
-		String sql = "SELECT *  FROM  utilisateur WHERE (email=?)";
-		Connection connection =null;
+		String sql = "SELECT * FROM utilisateur WHERE email=?";
 		DBA bd = new DBA();
-		connection = bd.seconnecter();
-		PreparedStatement pst = null;
-		ResultSet rs = null;
-		try {
-			pst = connection.prepareStatement(sql);
+		try (Connection connection = bd.seconnecter();
+			 PreparedStatement pst = connection.prepareStatement(sql)) {
 			pst.setString(1, em);
-			rs = pst.executeQuery();
-			if(rs.next()) {
-				User u = new User();
-				u.setId(rs.getLong("idutilisateur"));
-				u.setNom(rs.getString("nom"));
-				u.setPrenom(rs.getString("prenom"));
-				u.setEmail(rs.getString("email"));
-				u.setMot_de_passe(rs.getString("mot_de_passe"));
-				u.setTelephone(rs.getString("telephone"));
-				u.setRole(rs.getString("role"));
-				return u;
-					
+			try (ResultSet rs = pst.executeQuery()) {
+				if(rs.next()) {
+					User u = new User();
+					u.setId(rs.getLong("idutilisateur"));
+					u.setNom(rs.getString("nom"));
+					u.setPrenom(rs.getString("prenom"));
+					u.setEmail(rs.getString("email"));
+					u.setMot_de_passe(rs.getString("mot_de_passe"));
+					u.setTelephone(rs.getString("telephone"));
+					u.setRole(rs.getString("role"));
+					return u;
+				}
 			}
-			if(rs!= null) {
-			    try {
-			        rs.close();
-			    } catch ( SQLException ignore ) {}
-			}
-			if(pst!= null) {
-			    try {
-			        pst.close();
-			    } catch ( SQLException ignore ) {}
-			}    
-		if(connection != null) {
-			try {
-				connection.close();
-			}
-			catch(SQLException ignore) {}
-		}
-		
-			} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return null;
 	}
 	//Methode recuperer user by id
 	
 public User userById(int id){
-		
-		
-		String sql = "SELECT *  FROM  utilisateur WHERE (idutilisateur=?)";
-		Connection connection =null;
+		String sql = "SELECT * FROM utilisateur WHERE idutilisateur=?";
 		DBA bd = new DBA();
-		connection = bd.seconnecter();
-		PreparedStatement pst = null;
-		ResultSet rs = null;
-		try {
-			pst = connection.prepareStatement(sql);
+		try (Connection connection = bd.seconnecter();
+			 PreparedStatement pst = connection.prepareStatement(sql)) {
 			pst.setInt(1, id);
-			rs = pst.executeQuery();
-			if(rs.next()) {
-				User u = new User();
-				u.setId(rs.getLong("idutilisateur"));
-				u.setNom(rs.getString("nom"));
-				u.setPrenom(rs.getString("prenom"));
-				u.setEmail(rs.getString("email"));
-				u.setMot_de_passe(rs.getString("mot_de_passe"));
-				u.setTelephone(rs.getString("telephone"));
-				u.setRole(rs.getString("role"));
-				return u;
-					
+			try (ResultSet rs = pst.executeQuery()) {
+				if(rs.next()) {
+					User u = new User();
+					u.setId(rs.getLong("idutilisateur"));
+					u.setNom(rs.getString("nom"));
+					u.setPrenom(rs.getString("prenom"));
+					u.setEmail(rs.getString("email"));
+					u.setMot_de_passe(rs.getString("mot_de_passe"));
+					u.setTelephone(rs.getString("telephone"));
+					u.setRole(rs.getString("role"));
+					return u;
+				}
 			}
-			if(rs!= null) {
-			    try {
-			        rs.close();
-			    } catch ( SQLException ignore ) {}
-			}
-			if(pst!= null) {
-			    try {
-			        pst.close();
-			    } catch ( SQLException ignore ) {}
-			}    
-		if(connection != null) {
-			try {
-				connection.close();
-			}
-			catch(SQLException ignore) {}
-		}
-		
-			} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return null;
 	}
 
@@ -358,32 +251,25 @@ public User userById(int id){
 	public List<User> rechercherUsers(String motCle) {
 		List<User> luser = new ArrayList<User>();
 		String sql = "SELECT * FROM utilisateur WHERE nom LIKE ? OR prenom LIKE ? OR email LIKE ? order by idutilisateur desc";
-		Connection connection = null;
 		DBA bd = new DBA();
-		connection = bd.seconnecter();
-		PreparedStatement pst = null;
-		ResultSet rs = null;
-
-		try {
-			pst = connection.prepareStatement(sql);
+		try (Connection connection = bd.seconnecter();
+			 PreparedStatement pst = connection.prepareStatement(sql)) {
 			pst.setString(1, "%" + motCle + "%");
 			pst.setString(2, "%" + motCle + "%");
 			pst.setString(3, "%" + motCle + "%");
-			rs = pst.executeQuery();
-			while (rs.next()) {
-				User user = new User();
-				user.setId(rs.getLong("idutilisateur"));
-				user.setNom(rs.getString("nom"));
-				user.setPrenom(rs.getString("prenom"));
-				user.setEmail(rs.getString("email"));
-				user.setMot_de_passe(rs.getString("mot_de_passe"));
-				user.setTelephone(rs.getString("telephone"));
-				user.setRole(rs.getString("role"));
-				luser.add(user);
+			try (ResultSet rs = pst.executeQuery()) {
+				while (rs.next()) {
+					User user = new User();
+					user.setId(rs.getLong("idutilisateur"));
+					user.setNom(rs.getString("nom"));
+					user.setPrenom(rs.getString("prenom"));
+					user.setEmail(rs.getString("email"));
+					user.setMot_de_passe(rs.getString("mot_de_passe"));
+					user.setTelephone(rs.getString("telephone"));
+					user.setRole(rs.getString("role"));
+					luser.add(user);
+				}
 			}
-			if (rs != null) try { rs.close(); } catch (SQLException ignore) {}
-			if (pst != null) try { pst.close(); } catch (SQLException ignore) {}
-			if (connection != null) try { connection.close(); } catch (SQLException ignore) {}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

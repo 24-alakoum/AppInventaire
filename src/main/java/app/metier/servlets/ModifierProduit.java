@@ -16,10 +16,8 @@ public class ModifierProduit extends HttpServlet {
         String idParam = request.getParameter("param");
         if (idParam != null) {
             int id = Integer.parseInt(idParam);
-            Produit produit = new Produit();
-            // Since we don't have a getProduitById, we'll find it in the list for now
-            // Better to add getProduitById to the model
-            Produit pFound = produit.getProduits().stream().filter(p -> p.getIdProduct() == id).findFirst().orElse(null);
+            Produit produitModel = new Produit();
+            Produit pFound = produitModel.getProduitById(id);
             request.setAttribute("produit", pFound);
         }
         request.getServletContext().getRequestDispatcher("/WEB-INF/modifierproduit.jsp").forward(request, response);

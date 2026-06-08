@@ -32,7 +32,7 @@
             <thead>
             
                 <tr>
-                    <th>ref</th>
+                    <th>ID</th>
                     <th>Produit</th>
                     <th>Quantité</th>
                     <th>Prix unitaire</th>
@@ -40,17 +40,21 @@
                 </tr>
             </thead>
             <tbody>
-            <c:forEach items="${linvtv }" var="invtv">
+            <c:set var="total" value="0" />
+            <c:forEach items="${linvtv}" var="item">
                 <tr>
-                    <td>ref</td>
-                    <td>${invtv.nomProduit}</td>
-                    <td>${invtv.quantite}</td>
-                    <td>${invtv.prix}</td>
-                    <td>${invtv.prix * quantite}</td>
-                   
+                    <td>${item.idligneInventaire}</td>
+                    <td>${item.nomProduit}</td>
+                    <td>${item.quantite}</td>
+                    <td>${item.prix}</td>
+                    <td>${item.prix * item.quantite}</td>
+                    <c:set var="total" value="${total + (item.prix * item.quantite)}" />
                 </tr>
                 </c:forEach>
-                
+                <tr style="font-weight: bold; background: #f1f5f9;">
+                    <td colspan="4" style="text-align: right;">Total Articles:</td>
+                    <td>${total}</td>
+                </tr>
             </tbody>
         </table>
         </c:if>

@@ -141,14 +141,10 @@ public class InventoryView {
 	public List<InventoryView> getRQV(){
 		List<InventoryView> linvtv = new ArrayList<InventoryView>();
 		String sql = "SELECT * FROM inventoryView3";
-		Statement st = null;
-		ResultSet rs = null;
-		Connection connection =null;
 		DBA bd = new DBA();
-		connection = bd.seconnecter();
-		try {
-			st = connection.createStatement();
-			rs = st.executeQuery(sql);
+		try (Connection connection = bd.seconnecter();
+			 Statement st = connection.createStatement();
+			 ResultSet rs = st.executeQuery(sql)) {
 			while(rs.next()) {
 				InventoryView invtv = new InventoryView();
 				invtv.setIdinventaire(rs.getInt(1));
@@ -163,47 +159,40 @@ public class InventoryView {
 				
 				linvtv.add(invtv);
 			}
-			rs.close();st.close();connection.close();
 		} catch (SQLException e) {
-			System.out.println("Une erreur s'est produite lors de la r�cup�ration des donn�es: "+e.getMessage());
+			System.out.println("Une erreur s'est produite lors de la récupération des données: "+e.getMessage());
 			e.printStackTrace();
 		}
-		
 		return linvtv;
 	}
 	
 	public List<InventoryView> getInventoryByID(int numRech){
 		List<InventoryView> linvtv = new ArrayList<InventoryView>();
-		String sql = "SELECT * FROM inventoryView3 WHERE (idinventaire=?)";
-		PreparedStatement pst = null;
-		ResultSet rs = null;
-		Connection connection =null;
+		String sql = "SELECT * FROM inventoryView3 WHERE idinventaire=?";
 		DBA bd = new DBA();
-		connection = bd.seconnecter();
-		try {
-			pst = connection.prepareStatement(sql);
+		try (Connection connection = bd.seconnecter();
+			 PreparedStatement pst = connection.prepareStatement(sql)) {
 			pst.setInt(1, numRech);
-			rs = pst.executeQuery();
-			while(rs.next()) {
-				InventoryView invtv = new InventoryView();
-				invtv.setIdinventaire(rs.getInt(1));
-				invtv.setDateInventaire(rs.getDate(2));
-				invtv.setIdligneInventaire(rs.getInt(3));
-				invtv.setNomProduit(rs.getString(4));
-				invtv.setQuantite(rs.getDouble(5));
-				invtv.setPrix(rs.getDouble(6));
-				invtv.setNom(rs.getString(7));
-				invtv.setPrenom(rs.getString(8));
-				invtv.setTelephone(rs.getString(9));
-				
-				linvtv.add(invtv);
+			try (ResultSet rs = pst.executeQuery()) {
+				while(rs.next()) {
+					InventoryView invtv = new InventoryView();
+					invtv.setIdinventaire(rs.getInt(1));
+					invtv.setDateInventaire(rs.getDate(2));
+					invtv.setIdligneInventaire(rs.getInt(3));
+					invtv.setNomProduit(rs.getString(4));
+					invtv.setQuantite(rs.getDouble(5));
+					invtv.setPrix(rs.getDouble(6));
+					invtv.setNom(rs.getString(7));
+					invtv.setPrenom(rs.getString(8));
+					invtv.setTelephone(rs.getString(9));
+
+					linvtv.add(invtv);
+				}
 			}
-			rs.close();pst.close();connection.close();
 		} catch (SQLException e) {
-			System.out.println("Une erreur s'est produite lors de la r�cup�ration des donn�es: "+e.getMessage());
+			System.out.println("Une erreur s'est produite lors de la récupération des données: "+e.getMessage());
 			e.printStackTrace();
 		}
-		
 		return linvtv;
 	}
 

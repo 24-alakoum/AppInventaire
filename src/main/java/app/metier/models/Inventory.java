@@ -195,17 +195,12 @@ public class Inventory {
 	
 	public List<Inventory> recupererInventaire(){
 		List<Inventory> linv = new ArrayList<Inventory>();
-		Connection connection =null;
 		DBA bd = new DBA();
-		connection = bd.seconnecter();
-		String sql = "SELECT * FROM inventaire";
+		String sql = "SELECT * FROM inventaire ORDER BY idinventaire DESC";
 		
-		Statement st = null;
-		ResultSet rslt = null;
-		
-		try {
-			st = connection.createStatement();
-			rslt = st.executeQuery(sql);
+		try (Connection connection = bd.seconnecter();
+			 Statement st = connection.createStatement();
+			 ResultSet rslt = st.executeQuery(sql)) {
 			while(rslt.next()) {
 				Inventory invent = new Inventory();
 				invent.setIdinventaire(rslt.getInt("idinventaire"));
@@ -225,29 +220,19 @@ public class Inventory {
 				
 				linv.add(invent);
 			}
-			if(rslt!=null) rslt.close();
-			if(st!=null) st.close(); 
-			if(connection!=null)	connection.close();	
-			 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		return linv;
-		
 	}
 	
 	// Mise a jour inventaire
 	
 	public void updateInventaire(Inventory inve , int idinventaire) {
 		String sql = "UPDATE inventaire SET idutilisateur = ?, dateInventaire =?, nomComptable=?, nomBoutique=?, quartier=?, creditsClients=?, dettesFournisseurs=?, ancienCompte=?, montantTotal=?, benefice=?, partGerant=?, partProprietaire=?, departSomme=? WHERE ( idinventaire=?)";
-		Connection connection =null;
 		DBA bd = new DBA();
-		connection = bd.seconnecter();
-		PreparedStatement pst = null;
-		try {
-			pst = connection.prepareStatement(sql);
+		try (Connection connection = bd.seconnecter();
+			 PreparedStatement pst = connection.prepareStatement(sql)) {
 			pst.setInt(1,inve.getIdutilisateur());
 			pst.setDate(2, new java.sql.Date(inve.getDateInventaire().getTime()));
 			pst.setString(3, inve.getNomComptable());
@@ -265,80 +250,59 @@ public class Inventory {
 			int i = pst.executeUpdate();
 			if(i!= 0) System.out.println("Modification reusie !");
 			else System.out.println("Modification non reusie !");
-			
-			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			System.out.println("Modification non reusie !" +e.getMessage());
 			e.printStackTrace();
 		}
-		
 	}//Fin de la update
 	
 	//------------------------------------------------------------------
 
-	//DELETE - Suppression des donn�es
+	//DELETE - Suppression des données
 	
 	public void deleteInventaire(int idinventaire) {
 		String sql = "DELETE FROM  inventaire WHERE ( idinventaire=?)";
-		Connection connection =null;
 		DBA bd = new DBA();
-		connection = bd.seconnecter();
-		PreparedStatement pst = null;
-		
-		try {
-			pst = connection.prepareStatement(sql);
+		try (Connection connection = bd.seconnecter();
+			 PreparedStatement pst = connection.prepareStatement(sql)) {
 			pst.setInt(1, idinventaire);
 			int i = pst.executeUpdate();
 			if(i!=0) System.out.println("Element supprimé !");
-			System.out.println("Element non supprimé !");
-			pst.close();
-			connection.close();
+			else System.out.println("Element non supprimé !");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 	
 	
 	public Inventory getInventoryByIdInventaire(int idinventaire) {
 		Inventory inve = new Inventory();
-		String sql = "SELECT * FROM inventaire WHERE (idinventaire=?)";
-		 Connection connection = null;
-		 DBA db = new DBA();
-		 connection = db.seconnecter();
-		
-		 ResultSet rs = null;
-		 PreparedStatement pst = null;
-		try {
-			pst = connection.prepareStatement(sql);
+		String sql = "SELECT * FROM inventaire WHERE idinventaire=?";
+		DBA bd = new DBA();
+		try (Connection connection = bd.seconnecter();
+			 PreparedStatement pst = connection.prepareStatement(sql)) {
 			pst.setInt(1,idinventaire);
-			rs = pst.executeQuery();
-			
-			while(rs.next()) {
-				inve.setIdinventaire(rs.getInt("idinventaire"));
-				inve.setIdutilisateur(rs.getInt("idutilisateur"));
-				inve.setDateInventaire(rs.getDate("dateInventaire"));
-				inve.setNomComptable(rs.getString("nomComptable"));
-				inve.setNomBoutique(rs.getString("nomBoutique"));
-				inve.setQuartier(rs.getString("quartier"));
-				inve.setCreditsClients(rs.getDouble("creditsClients"));
-				inve.setDettesFournisseurs(rs.getDouble("dettesFournisseurs"));
-				inve.setAncienCompte(rs.getDouble("ancienCompte"));
-				inve.setMontantTotal(rs.getDouble("montantTotal"));
-				inve.setBenefice(rs.getDouble("benefice"));
-				inve.setPartGerant(rs.getDouble("partGerant"));
-				inve.setPartProprietaire(rs.getDouble("partProprietaire"));
-				inve.setDepartSomme(rs.getDouble("departSomme"));
+			try (ResultSet rs = pst.executeQuery()) {
+				while(rs.next()) {
+					inve.setIdinventaire(rs.getInt("idinventaire"));
+					inve.setIdutilisateur(rs.getInt("idutilisateur"));
+					inve.setDateInventaire(rs.getDate("dateInventaire"));
+					inve.setNomComptable(rs.getString("nomComptable"));
+					inve.setNomBoutique(rs.getString("nomBoutique"));
+					inve.setQuartier(rs.getString("quartier"));
+					inve.setCreditsClients(rs.getDouble("creditsClients"));
+					inve.setDettesFournisseurs(rs.getDouble("dettesFournisseurs"));
+					inve.setAncienCompte(rs.getDouble("ancienCompte"));
+					inve.setMontantTotal(rs.getDouble("montantTotal"));
+					inve.setBenefice(rs.getDouble("benefice"));
+					inve.setPartGerant(rs.getDouble("partGerant"));
+					inve.setPartProprietaire(rs.getDouble("partProprietaire"));
+					inve.setDepartSomme(rs.getDouble("departSomme"));
+				}
 			}
-			pst.close();connection.close();
-
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		return inve;
 		
 		/*public Inventory getInventaireById(int idInventaire) {
